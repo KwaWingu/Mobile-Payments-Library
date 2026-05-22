@@ -1,56 +1,48 @@
-name: kw-mobile-library-pr-checks
-run-name: kw-mobile-library-pr-checks
+name: kw-mobile-library-checks
+run-name: kw-mobile-library-checks
 'on':
+  push:
+    branches: [main]
+  pull_request:
   issue_comment:
     types: [created]
 
 jobs:
-  install-and-cache-deps:
-    runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && github.event.comment.body == '/test'
-    timeout-minutes: 20
-    steps:
-      - name: Get Pull Request (PR) Branch
-        uses: xt0rted/pull-request-comment-branch@v2
-        id: comment-branch
-      - name: Checkout Pull Request (PR) Branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.comment-branch.outputs.head_ref }}
-          fetch-depth: 0
-      - name: Set up Java 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-read-only: false
-
   library-format-static-analysis-unit-test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: install-and-cache-deps
-    if: github.event.issue.pull_request && github.event.comment.body == '/test'
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       github.event.comment.body == '/test')
     steps:
-      - name: Get Pull Request (PR) Branch
+      - name: Get PR branch (comment trigger)
+        if: github.event_name == 'issue_comment'
         uses: xt0rted/pull-request-comment-branch@v2
         id: comment-branch
-      - name: Checkout PR branch
+
+      - name: Checkout (comment trigger)
+        if: github.event_name == 'issue_comment'
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
+
+      - name: Checkout (push / pull_request trigger)
+        if: github.event_name != 'issue_comment'
+        uses: actions/checkout@v4
+
       - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-read-only: true
-      - name: Run Gradle targets for the Library tasks
+
+      - name: Run CI pipeline
         run: ./scripts/ci/kw-mobile-lib-format-static-analysis-unit-test.sh
         env:
           SNIPPE_API_KEY: ${{ secrets.SNIPPE_API_KEY }}
