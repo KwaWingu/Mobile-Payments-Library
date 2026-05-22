@@ -17,8 +17,10 @@ import org.slf4j.LoggerFactory;
 
 public class MixxByYasPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(MixxByYasPaymentTest.class);
-  private static final Set<String> VALID_STATUSES =
+  private static final Set<String> VALID_COLLECT_STATUSES =
       Set.of("pending", "processing", "completed", "failed");
+  private static final Set<String> VALID_PAYOUT_STATUSES =
+      Set.of("pending", "processing", "completed", "failed", "reversed");
 
   private MixxByYasPayment payment;
 
@@ -32,7 +34,7 @@ public class MixxByYasPaymentTest {
     MixxByYasCollectPayload payload =
         new MixxByYasCollectPayload.Builder()
             .setAmount(1000L)
-            .setPhone("+255676000000")
+            .setPhone("255676000000")
             .setReference("mixxbyyas-collect-test")
             .setDescription("MixxByYas collect test")
             .build();
@@ -40,9 +42,10 @@ public class MixxByYasPaymentTest {
     PaymentResponse response = payment.collect(payload);
 
     assertNotNull(response.reference(), "reference must not be null");
+    assertFalse(response.reference().isBlank(), "reference must not be blank");
     assertTrue(
-        VALID_STATUSES.contains(response.status()),
-        "status must be one of " + VALID_STATUSES + ", got: " + response.status());
+        VALID_COLLECT_STATUSES.contains(response.status()),
+        "status must be one of " + VALID_COLLECT_STATUSES + ", got: " + response.status());
     assertEquals(1000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("collect response: ref={} status={}", response.reference(), response.status());
@@ -53,7 +56,7 @@ public class MixxByYasPaymentTest {
     MixxByYasDisbursePayload payload =
         new MixxByYasDisbursePayload.Builder()
             .setAmount(1000L)
-            .setPhone("+255676000000")
+            .setPhone("255676000000")
             .setReference("mixxbyyas-disburse-test")
             .setDescription("MixxByYas disbursement test")
             .build();
@@ -61,9 +64,10 @@ public class MixxByYasPaymentTest {
     PayoutResponse response = payment.disburse(payload);
 
     assertNotNull(response.reference(), "reference must not be null");
+    assertFalse(response.reference().isBlank(), "reference must not be blank");
     assertTrue(
-        VALID_STATUSES.contains(response.status()),
-        "status must be one of " + VALID_STATUSES + ", got: " + response.status());
+        VALID_PAYOUT_STATUSES.contains(response.status()),
+        "status must be one of " + VALID_PAYOUT_STATUSES + ", got: " + response.status());
     assertEquals(1000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
