@@ -26,12 +26,10 @@ public class AirtelPayment implements MobilePayment {
     Map<String, Object> body =
         Map.of(
             "payment_type", "mobile",
-            "network", "airtel_money",
-            "amount", payload.amount(),
-            "currency", "TZS",
-            "customer", Map.of("phone", payload.phone()),
-            "external_reference", payload.reference(),
-            "description", payload.description());
+            "details", Map.of("amount", payload.amount(), "currency", "TZS"),
+            "phone_number", payload.phone(),
+            "customer", Map.of("firstname", "", "lastname", "", "email", ""),
+            "metadata", Map.of("order_id", payload.reference()));
     return client.postPayment(apiKey, payload.reference(), body);
   }
 
@@ -41,12 +39,10 @@ public class AirtelPayment implements MobilePayment {
     Map<String, Object> body =
         Map.of(
             "payment_type", "mobile",
-            "network", "airtel_money",
-            "amount", payload.amount(),
-            "currency", "TZS",
-            "recipient", Map.of("phone", payload.phone()),
-            "external_reference", payload.reference(),
-            "description", payload.description());
+            "details", Map.of("amount", payload.amount(), "currency", "TZS"),
+            "phone_number", payload.phone(),
+            "description", payload.description(),
+            "metadata", Map.of("order_id", payload.reference()));
     return client.postPayout(apiKey, payload.reference(), body);
   }
 

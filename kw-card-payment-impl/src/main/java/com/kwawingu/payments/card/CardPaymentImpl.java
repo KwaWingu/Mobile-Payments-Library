@@ -22,24 +22,19 @@ public final class CardPaymentImpl implements CardPayment {
   public String checkoutUrl(CardCollectPayload payload) throws IOException, InterruptedException {
     Map<String, Object> body =
         Map.of(
-            "payment_type",
-            "card",
-            "amount",
-            payload.amount(),
-            "currency",
-            "TZS",
+            "payment_type", "card",
+            "details",
+            Map.of(
+                "amount", payload.amount(),
+                "currency", "TZS",
+                "redirect_url", payload.redirectUrl(),
+                "cancel_url", payload.redirectUrl()),
             "customer",
             Map.of(
-                "first_name", payload.firstName(),
-                "last_name", payload.lastName(),
-                "email", payload.email(),
-                "phone", payload.phone()),
-            "external_reference",
-            payload.reference(),
-            "description",
-            payload.description(),
-            "redirect_url",
-            payload.redirectUrl());
+                "firstname", payload.firstName(),
+                "lastname", payload.lastName(),
+                "email", payload.email()),
+            "metadata", Map.of("order_id", payload.reference()));
     return client.postCardCheckout(apiKey, payload.reference(), body);
   }
 

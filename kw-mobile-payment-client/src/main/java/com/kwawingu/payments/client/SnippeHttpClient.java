@@ -133,7 +133,9 @@ public final class SnippeHttpClient {
       throw new IOException("Snippe error: response missing 'data' field. body=" + body);
     }
     JsonObject data = r.data;
-    // Field name needs sandbox verification — try checkout_url, then redirect_url
+    if (data.has("payment_url")) {
+      return data.get("payment_url").getAsString();
+    }
     if (data.has("checkout_url")) {
       return data.get("checkout_url").getAsString();
     }
