@@ -17,7 +17,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnippeHttpClient {
+public final class SnippeHttpClient {
   private static final Logger LOG = LoggerFactory.getLogger(SnippeHttpClient.class);
   private static final String BASE_URL = "https://api.snippe.sh";
 
@@ -69,7 +69,13 @@ public class SnippeHttpClient {
     HttpResponse<String> response =
         httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
-    LOG.debug("Snippe {} {} → {}", "POST", path, response.statusCode());
+    if (response.statusCode() < 200 || response.statusCode() >= 300) {
+      throw new IOException(
+          "Snippe HTTP error " + response.statusCode() + " for POST " + path
+              + ": " + response.body());
+    }
+
+    LOG.debug("Snippe POST {} → {}", path, response.statusCode());
     return response.body();
   }
 
@@ -77,6 +83,9 @@ public class SnippeHttpClient {
     ApiResponse r = gson.fromJson(body, ApiResponse.class);
     if (!"success".equals(r.status)) {
       throw new IOException("Snippe error [" + r.error_code + "]: " + r.message);
+    }
+    if (r.data == null) {
+      throw new IOException("Snippe error: response missing 'data' field. body=" + body);
     }
     JsonObject data = r.data;
     JsonObject amount = data.getAsJsonObject("amount");
@@ -98,6 +107,9 @@ public class SnippeHttpClient {
     if (!"success".equals(r.status)) {
       throw new IOException("Snippe error [" + r.error_code + "]: " + r.message);
     }
+    if (r.data == null) {
+      throw new IOException("Snippe error: response missing 'data' field. body=" + body);
+    }
     JsonObject data = r.data;
     JsonObject amount = data.getAsJsonObject("amount");
     return new PayoutResponse(
@@ -111,6 +123,9 @@ public class SnippeHttpClient {
     ApiResponse r = gson.fromJson(body, ApiResponse.class);
     if (!"success".equals(r.status)) {
       throw new IOException("Snippe error [" + r.error_code + "]: " + r.message);
+    }
+    if (r.data == null) {
+      throw new IOException("Snippe error: response missing 'data' field. body=" + body);
     }
     JsonObject data = r.data;
     // Field name needs sandbox verification — try checkout_url, then redirect_url
