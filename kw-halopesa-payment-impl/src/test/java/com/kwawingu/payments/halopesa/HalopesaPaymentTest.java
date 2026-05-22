@@ -17,8 +17,10 @@ import org.slf4j.LoggerFactory;
 
 public class HalopesaPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(HalopesaPaymentTest.class);
-  private static final Set<String> VALID_STATUSES =
+  private static final Set<String> VALID_COLLECT_STATUSES =
       Set.of("pending", "processing", "completed", "failed");
+  private static final Set<String> VALID_PAYOUT_STATUSES =
+      Set.of("pending", "processing", "completed", "failed", "reversed");
 
   private HalopesaPayment payment;
 
@@ -39,10 +41,11 @@ public class HalopesaPaymentTest {
 
     PaymentResponse response = payment.collect(payload);
 
-    assertNotNull(response.reference());
+    assertNotNull(response.reference(), "reference must not be null");
+    assertFalse(response.reference().isBlank(), "reference must not be blank");
     assertTrue(
-        VALID_STATUSES.contains(response.status()),
-        "status must be one of " + VALID_STATUSES + ", got: " + response.status());
+        VALID_COLLECT_STATUSES.contains(response.status()),
+        "status must be one of " + VALID_COLLECT_STATUSES + ", got: " + response.status());
     assertEquals(1000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("collect response: ref={} status={}", response.reference(), response.status());
@@ -54,16 +57,17 @@ public class HalopesaPaymentTest {
         new HalopesaDisbursePayload.Builder()
             .setAmount(1000L)
             .setPhone("255762000000")
-            .setReference("halopesa-collect-test")
-            .setDescription("Halopesa collect test")
+            .setReference("halopesa-disburse-test")
+            .setDescription("Halopesa disburse test")
             .build();
 
     PayoutResponse response = payment.disburse(payload);
 
-    assertNotNull(response.reference());
+    assertNotNull(response.reference(), "reference must not be null");
+    assertFalse(response.reference().isBlank(), "reference must not be blank");
     assertTrue(
-        VALID_STATUSES.contains(response.status()),
-        "status must be one of " + VALID_STATUSES + ", got: " + response.status());
+        VALID_PAYOUT_STATUSES.contains(response.status()),
+        "status must be one of " + VALID_PAYOUT_STATUSES + ", got: " + response.status());
     assertEquals(1000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
