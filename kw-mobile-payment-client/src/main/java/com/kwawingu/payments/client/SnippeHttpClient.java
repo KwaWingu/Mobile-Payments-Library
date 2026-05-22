@@ -71,8 +71,12 @@ public final class SnippeHttpClient {
 
     if (response.statusCode() < 200 || response.statusCode() >= 300) {
       throw new IOException(
-          "Snippe HTTP error " + response.statusCode() + " for POST " + path
-              + ": " + response.body());
+          "Snippe HTTP error "
+              + response.statusCode()
+              + " for POST "
+              + path
+              + ": "
+              + response.body());
     }
 
     LOG.debug("Snippe POST {} → {}", path, response.statusCode());

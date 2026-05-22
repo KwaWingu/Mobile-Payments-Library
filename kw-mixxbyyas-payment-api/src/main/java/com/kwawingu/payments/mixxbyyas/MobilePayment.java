@@ -10,5 +10,6 @@ import java.io.IOException;
 public interface MobilePayment {
   PaymentResponse collect(MixxByYasCollectPayload payload) throws IOException, InterruptedException;
 
-  PayoutResponse disburse(MixxByYasDisbursePayload payload) throws IOException, InterruptedException;
+  PayoutResponse disburse(MixxByYasDisbursePayload payload)
+      throws IOException, InterruptedException;
 }

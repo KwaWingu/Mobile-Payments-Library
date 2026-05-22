@@ -3,8 +3,4 @@
  */
 package com.kwawingu.payments.client.response;
 
-public record PayoutResponse(
-    String reference,
-    String status,
-    long amount,
-    String currency) {}
+public record PayoutResponse(String reference, String status, long amount, String currency) {}
