@@ -1,0 +1,7 @@
+apply from: rootProject.file('gradle/plugin-java.gradle')
+
+dependencies {
+    implementation project(':kw-card-payment-api')
+    implementation project(':kw-mobile-payment-client')
+    testImplementation libs.slfj
+}
