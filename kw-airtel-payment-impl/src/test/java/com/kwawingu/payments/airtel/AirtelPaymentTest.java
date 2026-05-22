@@ -39,8 +39,8 @@ public class AirtelPaymentTest {
 
     PaymentResponse response = payment.collect(payload);
 
-    assertNotNull(response.reference());
-    assertFalse(response.reference().isBlank());
+    assertNotNull(response.reference(), "reference must not be null");
+    assertFalse(response.reference().isBlank(), "reference must not be blank");
     assertTrue(
         VALID_STATUSES.contains(response.status()),
         "status must be one of " + VALID_STATUSES + ", got: " + response.status());
