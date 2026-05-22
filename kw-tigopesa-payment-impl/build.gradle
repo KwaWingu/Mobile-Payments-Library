@@ -1,7 +1,0 @@
-apply from: rootProject.file('gradle/plugin-java.gradle')
-
-dependencies {
-    implementation project(':kw-tigopesa-payment-api')
-    implementation libs.slfj;
-    implementation libs.gson;
-}
