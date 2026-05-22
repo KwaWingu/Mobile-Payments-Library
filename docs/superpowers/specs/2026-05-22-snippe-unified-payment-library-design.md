@@ -238,14 +238,19 @@ Each provider api module contains:
 
 ### 7.1 `MobilePayment` Interface
 
+Each provider api module defines its **own** `MobilePayment` interface with provider-specific payload types. Example for M-Pesa:
+
 ```java
+// kw-mpesa-payment-api
 public interface MobilePayment {
-  PaymentResponse collect(CollectPayload payload) throws IOException, InterruptedException;
-  PayoutResponse disburse(DisbursePayload payload) throws IOException, InterruptedException;
+  PaymentResponse collect(MpesaCollectPayload payload) throws IOException, InterruptedException;
+  PayoutResponse disburse(MpesaDisbursePayload payload) throws IOException, InterruptedException;
 }
 ```
 
-`CollectPayload` and `DisbursePayload` fields (identical across all mobile money providers):
+`AirtelMoney`, `Halopesa`, `MixxByYas` follow the same pattern with their own payload class names.
+
+`{Provider}CollectPayload` and `{Provider}DisbursePayload` fields (identical structure across all mobile money providers):
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
@@ -324,7 +329,7 @@ public class MpesaPayment implements MobilePayment {
 
 ### `CardPayment` impl
 
-Returns checkout URL extracted from Snippe response `data.checkout_url`.
+Returns checkout URL extracted from Snippe response. **Note:** exact field name (e.g. `data.checkout_url`) must be verified against the Snippe sandbox response during implementation — it is not explicitly documented in the current API reference.
 
 ---
 
