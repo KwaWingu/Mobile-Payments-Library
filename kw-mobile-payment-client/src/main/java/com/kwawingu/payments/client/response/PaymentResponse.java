@@ -3,10 +3,12 @@
  */
 package com.kwawingu.payments.client.response;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public record PaymentResponse(
     String reference,
     String status,
     long amount,
     String currency,
     String createdAt,
-    String completedAt) {}
+    @Nullable String completedAt) {}

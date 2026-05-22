@@ -20,6 +20,9 @@ dependencies {
     // Logback
     runtimeOnly libs.logback.classic
     runtimeOnly project(':kw-mobile-payment-logback-config')
+
+    // Checker Framework annotations available at compile time even without the checker running
+    compileOnly libs.checker.qual
 }
 
 def spotlessEnabled = Boolean.getBoolean('enable.spotless')

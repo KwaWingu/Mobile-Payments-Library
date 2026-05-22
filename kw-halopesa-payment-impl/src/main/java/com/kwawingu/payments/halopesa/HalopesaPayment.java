@@ -9,7 +9,7 @@ import com.kwawingu.payments.client.response.PaymentResponse;
 import com.kwawingu.payments.client.response.PayoutResponse;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class HalopesaPayment implements MobilePayment {
   private final SnippeHttpClient client;
@@ -48,15 +48,16 @@ public class HalopesaPayment implements MobilePayment {
   }
 
   public static class Builder {
-    private SnippeApiKey apiKey;
+    private @Nullable SnippeApiKey apiKey = null;
 
     public Builder setApiKey(SnippeApiKey apiKey) {
       this.apiKey = apiKey;
       return this;
     }
 
+    @SuppressWarnings("nullness") // null-checked above before passing to constructor
     public HalopesaPayment build() {
-      Objects.requireNonNull(apiKey, "apiKey cannot be null");
+      if (apiKey == null) throw new NullPointerException("apiKey cannot be null");
       return new HalopesaPayment(new SnippeHttpClient(), apiKey);
     }
   }

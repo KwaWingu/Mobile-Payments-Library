@@ -14,6 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,10 +144,10 @@ public final class SnippeHttpClient {
   }
 
   private static class ApiResponse {
-    String status;
-    int code;
-    String error_code;
-    String message;
-    JsonObject data;
+    @Nullable String status = null;
+    int code = 0;
+    @Nullable String error_code = null;
+    @Nullable String message = null;
+    @Nullable JsonObject data = null;
   }
 }

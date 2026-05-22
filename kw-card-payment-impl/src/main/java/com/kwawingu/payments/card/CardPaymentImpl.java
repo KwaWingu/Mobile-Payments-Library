@@ -7,7 +7,7 @@ import com.kwawingu.payments.client.SnippeApiKey;
 import com.kwawingu.payments.client.SnippeHttpClient;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class CardPaymentImpl implements CardPayment {
   private final SnippeHttpClient client;
@@ -31,15 +31,16 @@ public final class CardPaymentImpl implements CardPayment {
   }
 
   public static class Builder {
-    private SnippeApiKey apiKey;
+    private @Nullable SnippeApiKey apiKey = null;
 
     public Builder setApiKey(SnippeApiKey apiKey) {
       this.apiKey = apiKey;
       return this;
     }
 
+    @SuppressWarnings("nullness") // null-checked above before passing to constructor
     public CardPaymentImpl build() {
-      Objects.requireNonNull(apiKey, "apiKey cannot be null");
+      if (apiKey == null) throw new NullPointerException("apiKey cannot be null");
       return new CardPaymentImpl(new SnippeHttpClient(), apiKey);
     }
   }

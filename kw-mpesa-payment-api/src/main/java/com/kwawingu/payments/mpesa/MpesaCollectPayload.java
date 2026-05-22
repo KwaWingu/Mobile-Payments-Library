@@ -3,7 +3,7 @@
  */
 package com.kwawingu.payments.mpesa;
 
-import java.util.Objects;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class MpesaCollectPayload {
   private final long amount;
@@ -11,6 +11,8 @@ public final class MpesaCollectPayload {
   private final String reference;
   private final String description;
 
+  @SuppressWarnings(
+      "nullness") // builder.build() validates non-null before calling this constructor
   private MpesaCollectPayload(Builder builder) {
     this.amount = builder.amount;
     this.phone = builder.phone;
@@ -36,9 +38,9 @@ public final class MpesaCollectPayload {
 
   public static class Builder {
     private long amount;
-    private String phone;
-    private String reference;
-    private String description;
+    private @Nullable String phone = null;
+    private @Nullable String reference = null;
+    private @Nullable String description = null;
 
     public Builder setAmount(long amount) {
       this.amount = amount;
@@ -61,9 +63,9 @@ public final class MpesaCollectPayload {
     }
 
     public MpesaCollectPayload build() {
-      Objects.requireNonNull(phone, "phone cannot be null");
-      Objects.requireNonNull(reference, "reference cannot be null");
-      Objects.requireNonNull(description, "description cannot be null");
+      if (phone == null) throw new NullPointerException("phone cannot be null");
+      if (reference == null) throw new NullPointerException("reference cannot be null");
+      if (description == null) throw new NullPointerException("description cannot be null");
       if (amount <= 0) throw new IllegalArgumentException("amount must be positive");
       if (reference.length() > 30)
         throw new IllegalArgumentException("reference must be ≤30 chars");
