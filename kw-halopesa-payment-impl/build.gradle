@@ -2,6 +2,6 @@ apply from: rootProject.file('gradle/plugin-java.gradle')
 
 dependencies {
     implementation project(':kw-halopesa-payment-api')
-    implementation libs.slfj;
-    implementation libs.gson;
+    implementation project(':kw-mobile-payment-client')
+    testImplementation libs.slfj
 }
