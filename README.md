@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1><a href="https://github.com/TheCollinsByte/Mobile-Payments-Library">Mobile Payment Library</a></h1>
+<h1><a href="https://github.com/TheCollinsByte/Mobile-Payments-Library">KwaWingu Mobile Payments Library</a></h1>
 
 <a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/blob/main/LICENSE">
 <img alt="License" src="https://img.shields.io/github/license/TheCollinsByte/Mobile-Payments-Library?style=flat&color=eee&label="> </a>
@@ -14,117 +14,261 @@
 <a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/network/members">
 <img alt="Forks" src="https://img.shields.io/github/forks/TheCollinsByte/Mobile-Payments-Library?style=flat&color=66a8e0&label=Forks"> </a>
 
-<a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/watchers">
-<img alt="Watches" src="https://img.shields.io/github/watchers/TheCollinsByte/Mobile-Payments-Library?style=flat&color=f5d08b&label=Watches"> </a>
-
 <a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/pulse">
 <img alt="Last Updated" src="https://img.shields.io/github/last-commit/TheCollinsByte/Mobile-Payments-Library?style=flat&color=e06c75&label="> </a>
 
 </div>
 
+---
 
-## Description
+A Java SDK for mobile and card payments in Tanzania, built on the [Snippe](https://snippe.sh) unified payments API. Supports M-Pesa, Airtel Money, HaloPesa, Mixx by Yas, and card checkout — all through a single Bearer token and consistent builder API.
 
-This is open-source mobile payment library with support for M-Pesa, Tigo Pesa, Airtel Money and Halopesa. It provides a simple and intuitive API for integrating mobile payments into your applications.
+---
 
+## Table of Contents
+
+- [Supported Providers](#supported-providers)
+- [Requirements](#requirements)
 - [Installation](#installation)
-- [Features](#features)
+- [Configuration](#configuration)
 - [Usage](#usage)
+  - [M-Pesa](#m-pesa)
+  - [Airtel Money](#airtel-money)
+  - [HaloPesa](#halopesa)
+  - [Mixx by Yas](#mixx-by-yas)
+  - [Card Checkout](#card-checkout)
+- [Running Tests](#running-tests)
 - [Contributing](#contributing)
 - [License](#license)
 
+---
 
-## Features
-- Easy integration with Vodacom (M-Pesa), Tigo (Tigo Pesa), Airtel (Airtel Money), PesaPal, SelcomPay, AzamPay and Halotel (HaloPesa)
-- Support to various payment methods
-- Extensible for other mobile payment providers
-- Detailed error handling and logging
+## Supported Providers
+
+| Provider | Network | Collection (C2B) | Disbursement (B2B) |
+|---|---|:---:|:---:|
+| Vodacom M-Pesa | `mpesa` | ✓ | ✓ |
+| Airtel Money | `airtel_money` | ✓ | ✓ |
+| Halotel HaloPesa | `halotel` | ✓ | ✓ |
+| Mixx by Yas | `mixx_by_yas` | ✓ | ✓ |
+| Card (Visa/Mastercard) | — | ✓ (checkout URL) | — |
+| AzamPay | — | stub | stub |
+| Selcom | — | stub | stub |
+
+All amounts are in **TZS, integer smallest unit** (no decimals).
+
+---
+
+## Requirements
+
+- Java 21+
+- Gradle 8+
+- A [Snippe](https://snippe.sh) account with an API key
+
+---
 
 ## Installation
 
-### Gradle
-
-Add the following dependency to your `build.gradle` file:
+Add the provider module(s) you need to your `build.gradle`:
 
 ```groovy
 dependencies {
-    implementation 'com.kwawingu:mobile-payment:1.0.0'
+    // Pick the providers you need
+    implementation project(':kw-mpesa-payment-impl')
+    implementation project(':kw-airtel-payment-impl')
+    implementation project(':kw-halopesa-payment-impl')
+    implementation project(':kw-mixxbyyas-payment-impl')
+    implementation project(':kw-card-payment-impl')
 }
 ```
 
-### Maven
+---
 
-Add the following dependency to your `pom.xml` file:
+## Configuration
 
-```xml
-<dependency>
-    <groupId>com.kwawingu</groupId>
-    <artifactId>mobile-payment</artifactId>
-    <version>1.0.0</version>
-</dependency>
+Set a single environment variable before running your application:
+
+```bash
+export SNIPPE_API_KEY="your-snippe-api-key"
 ```
+
+The library reads this at runtime via `SnippeApiKey.fromEnvironment()`. No other credentials are required.
+
+---
 
 ## Usage
 
-### Initialization
-
-First, initialize the library with your M-Pesa credentials from environment variables.
+### M-Pesa
 
 ```java
-MpesaKeyProviderFromEnvironment.Config config =
-        new MpesaKeyProviderFromEnvironment.Config.Builder()
-                .setApiKeyEnvName("MPESA_API_KEY")
-                .setPublicKeyEnvName("MPESA_PUBLIC_KEY")
-                .build();
-mpesaSessionKeyGenerator = new SessionKeyGenerator();
-apiEndpoint = new ApiEndpoint(Environment.SANDBOX, Market.VODACOM_TANZANIA);
-keyProvider = new MpesaKeyProviderFromEnvironment(config);
+import com.kwawingu.payments.mpesa.MobilePayment;
+import com.kwawingu.payments.mpesa.MpesaCollectPayload;
+import com.kwawingu.payments.mpesa.MpesaDisbursePayload;
+import com.kwawingu.payments.mpesa.MpesaPayment;
+import com.kwawingu.payments.client.SnippeApiKey;
+import com.kwawingu.payments.client.response.PaymentResponse;
+import com.kwawingu.payments.client.response.PayoutResponse;
+
+MobilePayment mpesa = new MpesaPayment.Builder()
+    .setApiKey(SnippeApiKey.fromEnvironment())
+    .build();
+
+// Collect (C2B) — triggers USSD push to customer
+MpesaCollectPayload collectPayload = new MpesaCollectPayload.Builder()
+    .setAmount(5000)
+    .setPhone("255741000000")
+    .setReference("INV-2026-001")       // max 30 chars, used as idempotency key
+    .setDescription("Invoice payment")
+    .build();
+
+PaymentResponse payment = mpesa.collect(collectPayload);
+System.out.println(payment.reference()); // Snippe reference
+System.out.println(payment.status());    // pending | processing | completed | failed
+
+// Disburse (B2B) — push funds to a mobile wallet
+MpesaDisbursePayload disbursePayload = new MpesaDisbursePayload.Builder()
+    .setAmount(5000)
+    .setPhone("255741000000")
+    .setReference("PAY-2026-001")
+    .setDescription("Salary disbursement")
+    .build();
+
+PayoutResponse payout = mpesa.disburse(disbursePayload);
+System.out.println(payout.status()); // pending | processing | completed | failed | reversed
 ```
 
-This configuration sets up the MpesaKeyProviderFromEnvironment to retrieve the API key and public key from the specified environment variables. The SessionKeyGenerator and ApiEndpoint are also initialized for generating session keys and defining the API endpoint, respectively.
-
-### Customer To Business (C2B)
-
-The C2B API call is used as a standard customer-to-business transaction. Funds from the customer’s mobile money wallet will be deducted and be transferred to the mobile money wallet of the business. To authenticate and authorize this transaction, M-Pesa Payments Gateway will initiate a USSD Push message to the customer to gather and verify the mobile money PIN number. This number is not stored and is used only to authorize the transaction.
+### Airtel Money
 
 ```java
-Payload customerToBusinessPayload =
-        new Payload.Builder()
-                .setAmount("10.00")
-                .setCustomerMSISDN("+255-762-578-467")
-                .setCountry(Market.VODACOM_TANZANIA.getInputCountryValue())
-                .setCurrency(Market.VODACOM_TANZANIA.getInputCurrencyValue())
-                .setServiceProviderCode("ORG001")
-                .setTransactionReference("T12344C")
-                .setThirdPartyConversationID("1e9b774d1da34af78412a498cbc28f5e")
-                .setPurchasedItemsDesc("Lenovo ThinkPad X1 Carbon Gen 12")
-                .build();
+import com.kwawingu.payments.airtel.AirtelPayment;
+import com.kwawingu.payments.airtel.AirtelCollectPayload;
+import com.kwawingu.payments.airtel.MobilePayment;
 
-CustomerToBusinessTransaction customerToBusinessTransaction =
-        new CustomerToBusinessTransaction.Builder()
-                .setApiEndpoint(new ApiEndpoint(Environment.SANDBOX, Market.VODACOM_TANZANIA))
-                .setEncryptedSessionKey(session.getEncryptedSessionKey())
-                .setPayload(customerToBusinessPayload)
-                .build();
+MobilePayment airtel = new AirtelPayment.Builder()
+    .setApiKey(SnippeApiKey.fromEnvironment())
+    .build();
+
+PaymentResponse payment = airtel.collect(
+    new AirtelCollectPayload.Builder()
+        .setAmount(5000)
+        .setPhone("255780000000")
+        .setReference("INV-2026-002")
+        .setDescription("Invoice payment")
+        .build());
 ```
 
+### HaloPesa
+
+```java
+import com.kwawingu.payments.halopesa.HalopesaPayment;
+import com.kwawingu.payments.halopesa.HalopesaCollectPayload;
+import com.kwawingu.payments.halopesa.MobilePayment;
+
+MobilePayment halopesa = new HalopesaPayment.Builder()
+    .setApiKey(SnippeApiKey.fromEnvironment())
+    .build();
+
+PaymentResponse payment = halopesa.collect(
+    new HalopesaCollectPayload.Builder()
+        .setAmount(5000)
+        .setPhone("255762000000")
+        .setReference("INV-2026-003")
+        .setDescription("Invoice payment")
+        .build());
+```
+
+### Mixx by Yas
+
+```java
+import com.kwawingu.payments.mixxbyyas.MixxByYasPayment;
+import com.kwawingu.payments.mixxbyyas.MixxByYasCollectPayload;
+import com.kwawingu.payments.mixxbyyas.MobilePayment;
+
+MobilePayment mixxbyyas = new MixxByYasPayment.Builder()
+    .setApiKey(SnippeApiKey.fromEnvironment())
+    .build();
+
+PaymentResponse payment = mixxbyyas.collect(
+    new MixxByYasCollectPayload.Builder()
+        .setAmount(5000)
+        .setPhone("255676000000")
+        .setReference("INV-2026-004")
+        .setDescription("Invoice payment")
+        .build());
+```
+
+### Card Checkout
+
+Card payments return a hosted checkout URL. Redirect the customer to this URL to complete payment.
+
+```java
+import com.kwawingu.payments.card.CardPayment;
+import com.kwawingu.payments.card.CardPaymentImpl;
+import com.kwawingu.payments.card.CardCollectPayload;
+
+CardPayment card = new CardPaymentImpl.Builder()
+    .setApiKey(SnippeApiKey.fromEnvironment())
+    .build();
+
+String checkoutUrl = card.checkoutUrl(
+    new CardCollectPayload.Builder()
+        .setAmount(50000)
+        .setEmail("customer@example.com")
+        .setReference("INV-2026-005")
+        .setDescription("Order payment")
+        .build());
+
+// Redirect the customer to checkoutUrl
+```
+
+---
+
+## Running Tests
+
+Tests are integration tests that hit the Snippe sandbox. Set your API key before running:
+
+```bash
+export SNIPPE_API_KEY="your-snippe-sandbox-api-key"
+
+# Run all tests
+./gradlew check
+
+# Run a single provider
+./gradlew :kw-mpesa-payment-impl:test
+
+# Full CI pipeline (format + static analysis + tests)
+./scripts/ci/kw-mobile-lib-format-static-analysis-unit-test.sh
+```
+
+There are no unit tests with mocks — the project intentionally tests against the real sandbox to catch provider-specific behaviour.
+
+---
 
 ## Contributing
 
-Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+When adding a new provider, follow the existing pattern:
+1. Create `kw-{provider}-payment-api` with a `MobilePayment` interface and typed payload classes.
+2. Create `kw-{provider}-payment-impl` with a thin Snippe adapter (set the correct `network` field).
+3. Register both modules in `settings.gradle`.
+4. Add sandbox integration tests.
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Licensed under the Apache License 2.0 — see [LICENSE](LICENSE) for details.
 
-<br/><br/>
+<br/>
 
 <div align="center">
 
 <strong>⭐ hit the star button if you found this useful ⭐</strong><br>
 
 <a href="https://github.com/TheCollinsByte/Mobile-Payments-Library">Source</a>
-| <a href="https://x.com/TheCollinsByte" target="_blank">Twitter </a>
-| <a href="http://www.linkedin.com/in/collins-boniface" target="_blank">LinkedIn </a>
+| <a href="https://x.com/TheCollinsByte" target="_blank">Twitter</a>
+| <a href="http://www.linkedin.com/in/collins-boniface" target="_blank">LinkedIn</a>
 | <a href="mailto:collo@fastmail.com">Email</a>
+
 </div>
