@@ -1,6 +1,6 @@
 name: kw-mobile-library-pr-checks
 run-name: kw-mobile-library-pr-checks
-on:
+'on':
   issue_comment:
     types: [created]
 

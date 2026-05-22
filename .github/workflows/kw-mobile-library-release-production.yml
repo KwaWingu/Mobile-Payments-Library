@@ -1,6 +1,6 @@
 name: kw-mobile-library-release
 run-name: kw-mobile-library-release
-on:
+'on':
   push:
     tags:
       - 'v*'
