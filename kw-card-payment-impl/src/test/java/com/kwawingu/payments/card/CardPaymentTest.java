@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class CardPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(CardPaymentTest.class);
 
-  private CardPaymentImpl payment;
+  private CardPayment payment;
 
   @BeforeEach
   public void setUp() {

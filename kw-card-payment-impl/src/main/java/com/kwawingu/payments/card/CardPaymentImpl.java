@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-public class CardPaymentImpl implements CardPayment {
+public final class CardPaymentImpl implements CardPayment {
   private final SnippeHttpClient client;
   private final SnippeApiKey apiKey;
 
