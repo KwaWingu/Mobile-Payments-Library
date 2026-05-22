@@ -25,9 +25,10 @@ public class MpesaPayment implements MobilePayment {
       throws IOException, InterruptedException {
     Map<String, Object> body =
         Map.of(
-            "payment_type", "mobile-money",
+            "payment_type", "mobile",
             "network", "mpesa",
-            "amount", Map.of("currency", "TZS", "value", payload.amount()),
+            "amount", payload.amount(),
+            "currency", "TZS",
             "customer", Map.of("phone", payload.phone()),
             "external_reference", payload.reference(),
             "description", payload.description());
@@ -39,8 +40,10 @@ public class MpesaPayment implements MobilePayment {
       throws IOException, InterruptedException {
     Map<String, Object> body =
         Map.of(
+            "payment_type", "mobile",
             "network", "mpesa",
-            "amount", Map.of("currency", "TZS", "value", payload.amount()),
+            "amount", payload.amount(),
+            "currency", "TZS",
             "recipient", Map.of("phone", payload.phone()),
             "external_reference", payload.reference(),
             "description", payload.description());

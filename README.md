@@ -213,9 +213,13 @@ CardPayment card = new CardPaymentImpl.Builder()
 String checkoutUrl = card.checkoutUrl(
     new CardCollectPayload.Builder()
         .setAmount(50000)
+        .setFirstName("Jane")
+        .setLastName("Doe")
         .setEmail("customer@example.com")
+        .setPhone("255741000000")
         .setReference("INV-2026-005")
         .setDescription("Order payment")
+        .setRedirectUrl("https://yoursite.com/payments/callback")
         .build());
 
 // Redirect the customer to checkoutUrl

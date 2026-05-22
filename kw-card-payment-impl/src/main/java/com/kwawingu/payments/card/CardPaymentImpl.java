@@ -23,10 +23,17 @@ public final class CardPaymentImpl implements CardPayment {
     Map<String, Object> body =
         Map.of(
             "payment_type", "card",
-            "amount", Map.of("currency", "TZS", "value", payload.amount()),
-            "customer", Map.of("email", payload.email()),
+            "amount", payload.amount(),
+            "currency", "TZS",
+            "customer",
+            Map.of(
+                "first_name", payload.firstName(),
+                "last_name", payload.lastName(),
+                "email", payload.email(),
+                "phone", payload.phone()),
             "external_reference", payload.reference(),
-            "description", payload.description());
+            "description", payload.description(),
+            "redirect_url", payload.redirectUrl());
     return client.postCardCheckout(apiKey, payload.reference(), body);
   }
 

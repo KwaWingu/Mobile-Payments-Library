@@ -27,9 +27,13 @@ public class CardPaymentTest {
     CardCollectPayload payload =
         new CardCollectPayload.Builder()
             .setAmount(1000L)
+            .setFirstName("Test")
+            .setLastName("User")
             .setEmail("test@example.com")
+            .setPhone("255741000000")
             .setReference("card-checkout-test")
             .setDescription("Card checkout test")
+            .setRedirectUrl("https://kwawingu.com/card/callback")
             .build();
 
     String checkoutUrl = payment.checkoutUrl(payload);
