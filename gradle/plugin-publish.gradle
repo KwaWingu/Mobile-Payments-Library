@@ -13,7 +13,7 @@ publishing {
             pom {
                 name = project.name
                 description = "KwaWingu Mobile Payments Library - ${project.name}"
-                url = 'https://github.com/kwawingu/mobile-payments-library'
+                url = 'https://github.com/KwaWingu/Mobile-Payments-Library'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -28,9 +28,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git@github.com:kwawingu/mobile-payments-library.git'
-                    developerConnection = 'scm:git:git@github.com:kwawingu/mobile-payments-library.git'
-                    url = 'https://github.com/kwawingu/mobile-payments-library'
+                    connection = 'scm:git:https://github.com/KwaWingu/Mobile-Payments-Library.git'
+                    developerConnection = 'scm:git:git@github.com:KwaWingu/Mobile-Payments-Library.git'
+                    url = 'https://github.com/KwaWingu/Mobile-Payments-Library'
                 }
             }
         }
