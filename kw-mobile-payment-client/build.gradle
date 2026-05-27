@@ -4,3 +4,5 @@ dependencies {
     implementation libs.slfj
     implementation libs.gson
 }
+
+apply from: rootProject.file('gradle/plugin-publish.gradle')

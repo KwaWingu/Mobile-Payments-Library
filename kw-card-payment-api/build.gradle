@@ -3,3 +3,5 @@ apply from: rootProject.file('gradle/plugin-java.gradle')
 dependencies {
     api project(':kw-mobile-payment-client')
 }
+
+apply from: rootProject.file('gradle/plugin-publish.gradle')

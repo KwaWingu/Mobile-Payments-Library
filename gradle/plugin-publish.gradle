@@ -1,0 +1,47 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = project.name
+                description = "KwaWingu Mobile Payments Library - ${project.name}"
+                url = 'https://github.com/kwawingu/mobile-payments-library'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'kwawingu'
+                        name = 'KwaWingu'
+                        email = 'dev@kwawingu.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:kwawingu/mobile-payments-library.git'
+                    developerConnection = 'scm:git:git@github.com:kwawingu/mobile-payments-library.git'
+                    url = 'https://github.com/kwawingu/mobile-payments-library'
+                }
+            }
+        }
+    }
+}
+
+def signingKey = findProperty("signingKey") as String
+def signingPassword = findProperty("signingPassword") as String
+if (signingKey) {
+    signing {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.mavenJava
+    }
+}

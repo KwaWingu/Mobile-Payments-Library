@@ -11,7 +11,6 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: write
-      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,10 +25,13 @@ jobs:
         run: ./scripts/ci/kw-mobile-lib-format-static-analysis-unit-test.sh
         env:
           SNIPPE_API_KEY: ${{ secrets.SNIPPE_API_KEY }}
-      - name: Publish to GitHub Packages
-        run: ./gradlew publish
+      - name: Publish to Maven Central
+        run: ./gradlew publishAllPublicationsToCentralPortal
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
+          CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:

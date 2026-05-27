@@ -5,3 +5,5 @@ dependencies {
     implementation project(':kw-mobile-payment-client')
     testImplementation libs.slfj
 }
+
+apply from: rootProject.file('gradle/plugin-publish.gradle')
