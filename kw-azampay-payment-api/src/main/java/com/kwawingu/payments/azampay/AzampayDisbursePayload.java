@@ -10,6 +10,7 @@ public final class AzampayDisbursePayload {
   private final String phone;
   private final String reference;
   private final String description;
+  private final String recipientName;
 
   @SuppressWarnings(
       "nullness") // builder.build() validates non-null before calling this constructor
@@ -18,6 +19,7 @@ public final class AzampayDisbursePayload {
     this.phone = builder.phone;
     this.reference = builder.reference;
     this.description = builder.description;
+    this.recipientName = builder.recipientName;
   }
 
   public long amount() {
@@ -36,11 +38,16 @@ public final class AzampayDisbursePayload {
     return description;
   }
 
+  public String recipientName() {
+    return recipientName;
+  }
+
   public static class Builder {
     private long amount;
     private @Nullable String phone = null;
     private @Nullable String reference = null;
     private @Nullable String description = null;
+    private @Nullable String recipientName = null;
 
     public Builder setAmount(long amount) {
       this.amount = amount;
@@ -62,10 +69,16 @@ public final class AzampayDisbursePayload {
       return this;
     }
 
+    public Builder setRecipientName(String recipientName) {
+      this.recipientName = recipientName;
+      return this;
+    }
+
     public AzampayDisbursePayload build() {
       if (phone == null) throw new NullPointerException("phone cannot be null");
       if (reference == null) throw new NullPointerException("reference cannot be null");
       if (description == null) throw new NullPointerException("description cannot be null");
+      if (recipientName == null) throw new NullPointerException("recipientName cannot be null");
       if (amount <= 0) throw new IllegalArgumentException("amount must be positive");
       if (reference.length() > 30)
         throw new IllegalArgumentException("reference must be ≤30 chars");

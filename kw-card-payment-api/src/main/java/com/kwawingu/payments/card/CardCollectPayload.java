@@ -14,6 +14,11 @@ public final class CardCollectPayload {
   private final String reference;
   private final String description;
   private final String redirectUrl;
+  private final String address;
+  private final String city;
+  private final String state;
+  private final String postcode;
+  private final String country;
 
   @SuppressWarnings(
       "nullness") // builder.build() validates non-null before calling this constructor
@@ -26,6 +31,11 @@ public final class CardCollectPayload {
     this.reference = builder.reference;
     this.description = builder.description;
     this.redirectUrl = builder.redirectUrl;
+    this.address = builder.address;
+    this.city = builder.city;
+    this.state = builder.state;
+    this.postcode = builder.postcode;
+    this.country = builder.country;
   }
 
   public long amount() {
@@ -60,6 +70,26 @@ public final class CardCollectPayload {
     return redirectUrl;
   }
 
+  public String address() {
+    return address;
+  }
+
+  public String city() {
+    return city;
+  }
+
+  public String state() {
+    return state;
+  }
+
+  public String postcode() {
+    return postcode;
+  }
+
+  public String country() {
+    return country;
+  }
+
   public static class Builder {
     private long amount;
     private @Nullable String firstName = null;
@@ -69,6 +99,11 @@ public final class CardCollectPayload {
     private @Nullable String reference = null;
     private @Nullable String description = null;
     private @Nullable String redirectUrl = null;
+    private @Nullable String address = null;
+    private @Nullable String city = null;
+    private @Nullable String state = null;
+    private @Nullable String postcode = null;
+    private @Nullable String country = null;
 
     public Builder setAmount(long amount) {
       this.amount = amount;
@@ -110,6 +145,31 @@ public final class CardCollectPayload {
       return this;
     }
 
+    public Builder setAddress(String address) {
+      this.address = address;
+      return this;
+    }
+
+    public Builder setCity(String city) {
+      this.city = city;
+      return this;
+    }
+
+    public Builder setState(String state) {
+      this.state = state;
+      return this;
+    }
+
+    public Builder setPostcode(String postcode) {
+      this.postcode = postcode;
+      return this;
+    }
+
+    public Builder setCountry(String country) {
+      this.country = country;
+      return this;
+    }
+
     public CardCollectPayload build() {
       if (firstName == null) throw new NullPointerException("firstName cannot be null");
       if (lastName == null) throw new NullPointerException("lastName cannot be null");
@@ -118,6 +178,11 @@ public final class CardCollectPayload {
       if (reference == null) throw new NullPointerException("reference cannot be null");
       if (description == null) throw new NullPointerException("description cannot be null");
       if (redirectUrl == null) throw new NullPointerException("redirectUrl cannot be null");
+      if (address == null) throw new NullPointerException("address cannot be null");
+      if (city == null) throw new NullPointerException("city cannot be null");
+      if (state == null) throw new NullPointerException("state cannot be null");
+      if (postcode == null) throw new NullPointerException("postcode cannot be null");
+      if (country == null) throw new NullPointerException("country cannot be null");
       if (amount <= 0) throw new IllegalArgumentException("amount must be positive");
       if (reference.length() > 30)
         throw new IllegalArgumentException("reference must be ≤30 chars");

@@ -35,6 +35,9 @@ public class AirtelPaymentTest {
             .setPhone("+255780000000")
             .setReference("TEST-AIRTEL-C2B-001")
             .setDescription("Test Airtel collection")
+            .setFirstName("Test")
+            .setLastName("User")
+            .setEmail("test@example.com")
             .build();
 
     PaymentResponse response = payment.collect(payload);
@@ -57,6 +60,7 @@ public class AirtelPaymentTest {
             .setPhone("+255780000000")
             .setReference("TEST-AIRTEL-B2B-001")
             .setDescription("Test Airtel disbursement")
+            .setRecipientName("Test Recipient")
             .build();
 
     PayoutResponse response = payment.disburse(payload);

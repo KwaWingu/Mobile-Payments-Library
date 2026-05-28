@@ -37,6 +37,9 @@ public class HalopesaPaymentTest {
             .setPhone("255762000000")
             .setReference("halopesa-collect-test")
             .setDescription("Halopesa collect test")
+            .setFirstName("Test")
+            .setLastName("User")
+            .setEmail("test@example.com")
             .build();
 
     PaymentResponse response = payment.collect(payload);
@@ -59,6 +62,7 @@ public class HalopesaPaymentTest {
             .setPhone("255762000000")
             .setReference("halopesa-disburse-test")
             .setDescription("Halopesa disburse test")
+            .setRecipientName("Test Recipient")
             .build();
 
     PayoutResponse response = payment.disburse(payload);

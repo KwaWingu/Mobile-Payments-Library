@@ -34,6 +34,11 @@ public class CardPaymentTest {
             .setReference("card-checkout-test")
             .setDescription("Card checkout test")
             .setRedirectUrl("https://kwawingu.com/card/callback")
+            .setAddress("123 Test Street")
+            .setCity("Dar es Salaam")
+            .setState("DSM")
+            .setPostcode("14101")
+            .setCountry("TZ")
             .build();
 
     String checkoutUrl = payment.checkoutUrl(payload);

@@ -30,11 +30,18 @@ public final class CardPaymentImpl implements CardPayment {
                 "currency", "TZS",
                 "redirect_url", payload.redirectUrl(),
                 "cancel_url", payload.redirectUrl()),
+            "phone_number",
+            payload.phone().replaceFirst("^\\+", ""),
             "customer",
             Map.of(
                 "firstname", payload.firstName(),
                 "lastname", payload.lastName(),
-                "email", payload.email()),
+                "email", payload.email(),
+                "address", payload.address(),
+                "city", payload.city(),
+                "state", payload.state(),
+                "postcode", payload.postcode(),
+                "country", payload.country()),
             "metadata",
             Map.of("order_id", payload.reference()));
     return client.postCardCheckout(apiKey, payload.reference(), body);

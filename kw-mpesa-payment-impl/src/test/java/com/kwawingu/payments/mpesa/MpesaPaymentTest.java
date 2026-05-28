@@ -35,6 +35,9 @@ public class MpesaPaymentTest {
             .setPhone("+255741000000")
             .setReference("TEST-MPESA-C2B-001")
             .setDescription("Test M-Pesa collection")
+            .setFirstName("Test")
+            .setLastName("User")
+            .setEmail("test@example.com")
             .build();
 
     PaymentResponse response = payment.collect(payload);
@@ -57,6 +60,7 @@ public class MpesaPaymentTest {
             .setPhone("+255741000000")
             .setReference("TEST-MPESA-B2B-001")
             .setDescription("Test M-Pesa disbursement")
+            .setRecipientName("Test Recipient")
             .build();
 
     PayoutResponse response = payment.disburse(payload);

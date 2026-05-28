@@ -37,6 +37,9 @@ public class SelcomPaymentTest {
             .setPhone("255741000000")
             .setReference("selcom-collect-test")
             .setDescription("Selcom collect test")
+            .setFirstName("Test")
+            .setLastName("User")
+            .setEmail("test@example.com")
             .build();
 
     PaymentResponse response = payment.collect(payload);
@@ -59,6 +62,7 @@ public class SelcomPaymentTest {
             .setPhone("255741000000")
             .setReference("selcom-disburse-test")
             .setDescription("Selcom disburse test")
+            .setRecipientName("Test Recipient")
             .build();
 
     PayoutResponse response = payment.disburse(payload);

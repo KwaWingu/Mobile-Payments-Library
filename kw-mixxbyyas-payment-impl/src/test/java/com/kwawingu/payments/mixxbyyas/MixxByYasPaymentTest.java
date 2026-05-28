@@ -37,6 +37,9 @@ public class MixxByYasPaymentTest {
             .setPhone("255676000000")
             .setReference("mixxbyyas-collect-test")
             .setDescription("MixxByYas collect test")
+            .setFirstName("Test")
+            .setLastName("User")
+            .setEmail("test@example.com")
             .build();
 
     PaymentResponse response = payment.collect(payload);
@@ -59,6 +62,7 @@ public class MixxByYasPaymentTest {
             .setPhone("255676000000")
             .setReference("mixxbyyas-disburse-test")
             .setDescription("MixxByYas disbursement test")
+            .setRecipientName("Test Recipient")
             .build();
 
     PayoutResponse response = payment.disburse(payload);

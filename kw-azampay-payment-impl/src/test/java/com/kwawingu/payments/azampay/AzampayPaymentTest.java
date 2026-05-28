@@ -37,6 +37,9 @@ public class AzampayPaymentTest {
             .setPhone("255741000000")
             .setReference("azampay-collect-test")
             .setDescription("Azampay collect test")
+            .setFirstName("Test")
+            .setLastName("User")
+            .setEmail("test@example.com")
             .build();
 
     PaymentResponse response = payment.collect(payload);
@@ -59,6 +62,7 @@ public class AzampayPaymentTest {
             .setPhone("255741000000")
             .setReference("azampay-disburse-test")
             .setDescription("Azampay disburse test")
+            .setRecipientName("Test Recipient")
             .build();
 
     PayoutResponse response = payment.disburse(payload);

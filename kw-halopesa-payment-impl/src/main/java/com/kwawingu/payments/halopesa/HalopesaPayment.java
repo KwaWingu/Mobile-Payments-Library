@@ -28,7 +28,11 @@ public class HalopesaPayment implements MobilePayment {
             "payment_type", "mobile",
             "details", Map.of("amount", payload.amount(), "currency", "TZS"),
             "phone_number", payload.phone(),
-            "customer", Map.of("firstname", "", "lastname", "", "email", ""),
+            "customer",
+                Map.of(
+                    "firstname", payload.firstName(),
+                    "lastname", payload.lastName(),
+                    "email", payload.email()),
             "metadata", Map.of("order_id", payload.reference()));
     return client.postPayment(apiKey, payload.reference(), body);
   }
@@ -38,10 +42,14 @@ public class HalopesaPayment implements MobilePayment {
       throws IOException, InterruptedException {
     Map<String, Object> body =
         Map.of(
-            "payment_type", "mobile",
-            "details", Map.of("amount", payload.amount(), "currency", "TZS"),
-            "phone_number", payload.phone(),
-            "description", payload.description(),
+            "amount", payload.amount(),
+            "currency", "TZS",
+            "recipient",
+                Map.of(
+                    "name", payload.recipientName(),
+                    "phone", payload.phone().replaceFirst("^\\+", "")),
+            "channel", Map.of("type", "mobile_money", "provider", "halopesa"),
+            "narration", payload.description(),
             "metadata", Map.of("order_id", payload.reference()));
     return client.postPayout(apiKey, payload.reference(), body);
   }
