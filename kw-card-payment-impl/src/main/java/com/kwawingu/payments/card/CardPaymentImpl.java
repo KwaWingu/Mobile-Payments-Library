@@ -22,7 +22,8 @@ public final class CardPaymentImpl implements CardPayment {
   public String checkoutUrl(CardCollectPayload payload) throws IOException, InterruptedException {
     Map<String, Object> body =
         Map.of(
-            "payment_type", "card",
+            "payment_type",
+            "card",
             "details",
             Map.of(
                 "amount", payload.amount(),
@@ -34,7 +35,8 @@ public final class CardPaymentImpl implements CardPayment {
                 "firstname", payload.firstName(),
                 "lastname", payload.lastName(),
                 "email", payload.email()),
-            "metadata", Map.of("order_id", payload.reference()));
+            "metadata",
+            Map.of("order_id", payload.reference()));
     return client.postCardCheckout(apiKey, payload.reference(), body);
   }
 
