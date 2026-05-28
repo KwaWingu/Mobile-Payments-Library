@@ -10,5 +10,5 @@ public record PaymentResponse(
     String status,
     long amount,
     String currency,
-    String createdAt,
+    @Nullable String createdAt,
     @Nullable String completedAt) {}

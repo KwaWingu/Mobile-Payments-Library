@@ -94,17 +94,21 @@ public final class SnippeHttpClient {
     }
     JsonObject data = r.data;
     JsonObject amount = data.getAsJsonObject("amount");
-    String completedAt =
-        data.has("completed_at") && !data.get("completed_at").isJsonNull()
-            ? data.get("completed_at").getAsString()
-            : null;
+    String createdAt = optString(data, "created_at");
+    if (createdAt == null) {
+      createdAt = optString(data, "expires_at");
+    }
     return new PaymentResponse(
         data.get("reference").getAsString(),
         data.get("status").getAsString(),
         amount.get("value").getAsLong(),
         amount.get("currency").getAsString(),
-        data.get("created_at").getAsString(),
-        completedAt);
+        createdAt,
+        optString(data, "completed_at"));
+  }
+
+  private static @Nullable String optString(JsonObject obj, String key) {
+    return obj.has(key) && !obj.get(key).isJsonNull() ? obj.get(key).getAsString() : null;
   }
 
   private PayoutResponse parsePayoutResponse(String body) throws IOException {

@@ -43,12 +43,9 @@ public class AzampayPayment implements MobilePayment {
     Map<String, Object> body =
         Map.of(
             "amount", payload.amount(),
-            "currency", "TZS",
-            "recipient",
-                Map.of(
-                    "name", payload.recipientName(),
-                    "phone", payload.phone().replaceFirst("^\\+", "")),
-            "channel", Map.of("type", "mobile_money", "provider", "azampay"),
+            "channel", "mobile",
+            "recipient_phone", payload.phone().replaceFirst("^\\+", ""),
+            "recipient_name", payload.recipientName(),
             "narration", payload.description(),
             "metadata", Map.of("order_id", payload.reference()));
     return client.postPayout(apiKey, payload.reference(), body);
