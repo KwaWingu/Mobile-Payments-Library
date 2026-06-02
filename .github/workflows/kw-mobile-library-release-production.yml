@@ -26,7 +26,7 @@ jobs:
         env:
           SNIPPE_API_KEY: ${{ secrets.SNIPPE_API_KEY }}
       - name: Publish to Maven Central
-        run: ./gradlew publishAllPublicationsToCentralPortal
+        run: ./gradlew publishAggregationToCentralPortal
         env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
