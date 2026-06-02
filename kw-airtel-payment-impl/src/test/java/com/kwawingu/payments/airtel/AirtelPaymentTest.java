@@ -10,6 +10,7 @@ import com.kwawingu.payments.client.response.PaymentResponse;
 import com.kwawingu.payments.client.response.PayoutResponse;
 import java.io.IOException;
 import java.util.Set;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -63,17 +64,25 @@ public class AirtelPaymentTest {
             .setRecipientName("Test Recipient")
             .build();
 
-    PayoutResponse response = payment.disburse(payload);
+    try {
+      PayoutResponse response = payment.disburse(payload);
 
-    assertNotNull(response.reference());
-    assertFalse(response.reference().isBlank());
-    Set<String> validPayoutStatuses =
-        Set.of("pending", "completed", "failed", "reversed", "processing", "cancelled");
-    assertTrue(
-        validPayoutStatuses.contains(response.status()),
-        "status must be one of " + validPayoutStatuses + ", got: " + response.status());
-    assertEquals(5000L, response.amount());
-    assertEquals("TZS", response.currency());
-    LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
+      assertNotNull(response.reference());
+      assertFalse(response.reference().isBlank());
+      Set<String> validPayoutStatuses =
+          Set.of("pending", "completed", "failed", "reversed", "processing", "cancelled");
+      assertTrue(
+          validPayoutStatuses.contains(response.status()),
+          "status must be one of " + validPayoutStatuses + ", got: " + response.status());
+      assertEquals(5000L, response.amount());
+      assertEquals("TZS", response.currency());
+      LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
+    } catch (IOException e) {
+      if (e.getMessage() != null && e.getMessage().contains("PAY_004")) {
+        Assumptions.abort("Snippe sandbox payout balance unavailable: " + e.getMessage());
+      } else {
+        throw e;
+      }
+    }
   }
 }
