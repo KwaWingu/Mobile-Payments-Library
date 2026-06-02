@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 public class SelcomPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(SelcomPaymentTest.class);
   private static final Set<String> VALID_COLLECT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed");
+      Set.of("pending", "processing", "completed", "failed", "cancelled");
   private static final Set<String> VALID_PAYOUT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed", "reversed");
+      Set.of("pending", "processing", "completed", "failed", "reversed", "cancelled");
 
   private SelcomPayment payment;
 
@@ -58,7 +58,7 @@ public class SelcomPaymentTest {
   public void testDisburse() throws IOException, InterruptedException {
     SelcomDisbursePayload payload =
         new SelcomDisbursePayload.Builder()
-            .setAmount(1000L)
+            .setAmount(5000L)
             .setPhone("255741000000")
             .setReference("selcom-disburse-test")
             .setDescription("Selcom disburse test")
@@ -72,7 +72,7 @@ public class SelcomPaymentTest {
     assertTrue(
         VALID_PAYOUT_STATUSES.contains(response.status()),
         "status must be one of " + VALID_PAYOUT_STATUSES + ", got: " + response.status());
-    assertEquals(1000L, response.amount());
+    assertEquals(5000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
   }

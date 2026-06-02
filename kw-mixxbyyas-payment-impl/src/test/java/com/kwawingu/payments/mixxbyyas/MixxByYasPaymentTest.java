@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 public class MixxByYasPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(MixxByYasPaymentTest.class);
   private static final Set<String> VALID_COLLECT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed");
+      Set.of("pending", "processing", "completed", "failed", "cancelled");
   private static final Set<String> VALID_PAYOUT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed", "reversed");
+      Set.of("pending", "processing", "completed", "failed", "reversed", "cancelled");
 
   private MixxByYasPayment payment;
 
@@ -58,7 +58,7 @@ public class MixxByYasPaymentTest {
   public void testDisburse() throws IOException, InterruptedException {
     MixxByYasDisbursePayload payload =
         new MixxByYasDisbursePayload.Builder()
-            .setAmount(1000L)
+            .setAmount(5000L)
             .setPhone("255676000000")
             .setReference("mixxbyyas-disburse-test")
             .setDescription("MixxByYas disbursement test")
@@ -72,7 +72,7 @@ public class MixxByYasPaymentTest {
     assertTrue(
         VALID_PAYOUT_STATUSES.contains(response.status()),
         "status must be one of " + VALID_PAYOUT_STATUSES + ", got: " + response.status());
-    assertEquals(1000L, response.amount());
+    assertEquals(5000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
   }

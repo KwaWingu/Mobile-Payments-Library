@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class AirtelPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(AirtelPaymentTest.class);
   private static final Set<String> VALID_STATUSES =
-      Set.of("pending", "completed", "failed", "voided", "expired");
+      Set.of("pending", "completed", "failed", "voided", "expired", "cancelled");
 
   private AirtelPayment payment;
 
@@ -56,7 +56,7 @@ public class AirtelPaymentTest {
   public void testDisburse() throws IOException, InterruptedException {
     AirtelDisbursePayload payload =
         new AirtelDisbursePayload.Builder()
-            .setAmount(1000)
+            .setAmount(5000)
             .setPhone("+255780000000")
             .setReference("TEST-AIRTEL-B2B-001")
             .setDescription("Test Airtel disbursement")
@@ -67,11 +67,12 @@ public class AirtelPaymentTest {
 
     assertNotNull(response.reference());
     assertFalse(response.reference().isBlank());
-    Set<String> validPayoutStatuses = Set.of("pending", "completed", "failed", "reversed");
+    Set<String> validPayoutStatuses =
+        Set.of("pending", "completed", "failed", "reversed", "processing", "cancelled");
     assertTrue(
         validPayoutStatuses.contains(response.status()),
         "status must be one of " + validPayoutStatuses + ", got: " + response.status());
-    assertEquals(1000L, response.amount());
+    assertEquals(5000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
   }

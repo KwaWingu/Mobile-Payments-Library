@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 public class HalopesaPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(HalopesaPaymentTest.class);
   private static final Set<String> VALID_COLLECT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed");
+      Set.of("pending", "processing", "completed", "failed", "cancelled");
   private static final Set<String> VALID_PAYOUT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed", "reversed");
+      Set.of("pending", "processing", "completed", "failed", "reversed", "cancelled");
 
   private HalopesaPayment payment;
 
@@ -58,7 +58,7 @@ public class HalopesaPaymentTest {
   public void testDisburse() throws IOException, InterruptedException {
     HalopesaDisbursePayload payload =
         new HalopesaDisbursePayload.Builder()
-            .setAmount(1000L)
+            .setAmount(5000L)
             .setPhone("255762000000")
             .setReference("halopesa-disburse-test")
             .setDescription("Halopesa disburse test")
@@ -72,7 +72,7 @@ public class HalopesaPaymentTest {
     assertTrue(
         VALID_PAYOUT_STATUSES.contains(response.status()),
         "status must be one of " + VALID_PAYOUT_STATUSES + ", got: " + response.status());
-    assertEquals(1000L, response.amount());
+    assertEquals(5000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
   }

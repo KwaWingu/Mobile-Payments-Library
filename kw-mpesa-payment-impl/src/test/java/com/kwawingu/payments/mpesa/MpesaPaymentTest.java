@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class MpesaPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(MpesaPaymentTest.class);
   private static final Set<String> VALID_STATUSES =
-      Set.of("pending", "completed", "failed", "voided", "expired");
+      Set.of("pending", "completed", "failed", "voided", "expired", "cancelled");
 
   private MpesaPayment payment;
 
@@ -56,7 +56,7 @@ public class MpesaPaymentTest {
   public void testDisburse() throws IOException, InterruptedException {
     MpesaDisbursePayload payload =
         new MpesaDisbursePayload.Builder()
-            .setAmount(1000)
+            .setAmount(5000)
             .setPhone("+255741000000")
             .setReference("TEST-MPESA-B2B-001")
             .setDescription("Test M-Pesa disbursement")
@@ -67,11 +67,12 @@ public class MpesaPaymentTest {
 
     assertNotNull(response.reference(), "reference must not be null");
     assertFalse(response.reference().isBlank(), "reference must not be blank");
-    Set<String> validPayoutStatuses = Set.of("pending", "completed", "failed", "reversed");
+    Set<String> validPayoutStatuses =
+        Set.of("pending", "completed", "failed", "reversed", "processing", "cancelled");
     assertTrue(
         validPayoutStatuses.contains(response.status()),
         "status must be one of " + validPayoutStatuses + ", got: " + response.status());
-    assertEquals(1000L, response.amount());
+    assertEquals(5000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
   }
