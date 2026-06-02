@@ -21,7 +21,7 @@
 
 ---
 
-A Java SDK for mobile and card payments in Tanzania, built on the [Snippe](https://snippe.sh) unified payments API. Supports M-Pesa, Airtel Money, HaloPesa, Mixx by Yas, and card checkout — all through a single Bearer token and consistent builder API.
+A Java SDK for mobile money payments in Tanzania, built on the [Snippe](https://snippe.sh) unified payments API. Supports M-Pesa, Airtel Money, HaloPesa, and Mixx by Yas — all through a single Bearer token and consistent builder API.
 
 ---
 
@@ -36,7 +36,6 @@ A Java SDK for mobile and card payments in Tanzania, built on the [Snippe](https
   - [Airtel Money](#airtel-money)
   - [HaloPesa](#halopesa)
   - [Mixx by Yas](#mixx-by-yas)
-  - [Card Checkout](#card-checkout)
 - [Running Tests](#running-tests)
 - [Contributing](#contributing)
 - [License](#license)
@@ -51,9 +50,6 @@ A Java SDK for mobile and card payments in Tanzania, built on the [Snippe](https
 | Airtel Money | `airtel_money` | ✓ | ✓ |
 | Halotel HaloPesa | `halotel` | ✓ | ✓ |
 | Mixx by Yas | `mixx_by_yas` | ✓ | ✓ |
-| Card (Visa/Mastercard) | — | ✓ (checkout URL) | — |
-| AzamPay | — | stub | stub |
-| Selcom | — | stub | stub |
 
 All amounts are in **TZS, integer smallest unit** (no decimals).
 
@@ -69,17 +65,29 @@ All amounts are in **TZS, integer smallest unit** (no decimals).
 
 ## Installation
 
-Add the provider module(s) you need to your `build.gradle`:
+The library is published to Maven Central under the `com.kwawingu` group. Add the
+provider module(s) you need.
+
+**Gradle** (`build.gradle`):
 
 ```groovy
 dependencies {
     // Pick the providers you need
-    implementation project(':kw-mpesa-payment-impl')
-    implementation project(':kw-airtel-payment-impl')
-    implementation project(':kw-halopesa-payment-impl')
-    implementation project(':kw-mixxbyyas-payment-impl')
-    implementation project(':kw-card-payment-impl')
+    implementation 'com.kwawingu:kw-mpesa-payment-impl:0.0.1'
+    implementation 'com.kwawingu:kw-airtel-payment-impl:0.0.1'
+    implementation 'com.kwawingu:kw-halopesa-payment-impl:0.0.1'
+    implementation 'com.kwawingu:kw-mixxbyyas-payment-impl:0.0.1'
 }
+```
+
+**Maven** (`pom.xml`):
+
+```xml
+<dependency>
+    <groupId>com.kwawingu</groupId>
+    <artifactId>kw-mpesa-payment-impl</artifactId>
+    <version>0.0.1</version>
+</dependency>
 ```
 
 ---
@@ -195,34 +203,6 @@ PaymentResponse payment = mixxbyyas.collect(
         .setReference("INV-2026-004")
         .setDescription("Invoice payment")
         .build());
-```
-
-### Card Checkout
-
-Card payments return a hosted checkout URL. Redirect the customer to this URL to complete payment.
-
-```java
-import com.kwawingu.payments.card.CardPayment;
-import com.kwawingu.payments.card.CardPaymentImpl;
-import com.kwawingu.payments.card.CardCollectPayload;
-
-CardPayment card = new CardPaymentImpl.Builder()
-    .setApiKey(SnippeApiKey.fromEnvironment())
-    .build();
-
-String checkoutUrl = card.checkoutUrl(
-    new CardCollectPayload.Builder()
-        .setAmount(50000)
-        .setFirstName("Jane")
-        .setLastName("Doe")
-        .setEmail("customer@example.com")
-        .setPhone("255741000000")
-        .setReference("INV-2026-005")
-        .setDescription("Order payment")
-        .setRedirectUrl("https://yoursite.com/payments/callback")
-        .build());
-
-// Redirect the customer to checkoutUrl
 ```
 
 ---
