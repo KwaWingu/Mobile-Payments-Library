@@ -3,6 +3,7 @@
  */
 package com.kwawingu.payments.halopesa;
 
+import com.kwawingu.payments.client.PayloadValidation;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class HalopesaDisbursePayload {
@@ -75,13 +76,11 @@ public final class HalopesaDisbursePayload {
     }
 
     public HalopesaDisbursePayload build() {
-      if (phone == null) throw new NullPointerException("phone cannot be null");
-      if (reference == null) throw new NullPointerException("reference cannot be null");
-      if (description == null) throw new NullPointerException("description cannot be null");
-      if (recipientName == null) throw new NullPointerException("recipientName cannot be null");
-      if (amount <= 0) throw new IllegalArgumentException("amount must be positive");
-      if (reference.length() > 30)
-        throw new IllegalArgumentException("reference must be ≤30 chars");
+      this.phone = PayloadValidation.normalizePhone(phone);
+      this.reference = PayloadValidation.requireReference(reference);
+      PayloadValidation.requireNonBlank(description, "description");
+      PayloadValidation.requireNonBlank(recipientName, "recipientName");
+      PayloadValidation.requirePositiveAmount(amount);
       return new HalopesaDisbursePayload(this);
     }
   }

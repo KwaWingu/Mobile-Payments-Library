@@ -1,7 +1,7 @@
 apply from: rootProject.file('gradle/plugin-java.gradle')
 
 dependencies {
-    implementation libs.slfj
+    implementation libs.slf4j
     implementation libs.gson
 }
 

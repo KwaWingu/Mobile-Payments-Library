@@ -124,9 +124,12 @@ MobilePayment mpesa = new MpesaPayment.Builder()
 // Collect (C2B) — triggers USSD push to customer
 MpesaCollectPayload collectPayload = new MpesaCollectPayload.Builder()
     .setAmount(5000)
-    .setPhone("255741000000")
+    .setPhone("255741000000")           // +255…, 255…, or 0… — validated & normalized internally
     .setReference("INV-2026-001")       // max 30 chars, used as idempotency key
     .setDescription("Invoice payment")
+    .setFirstName("Jane")
+    .setLastName("Doe")
+    .setEmail("jane@example.com")
     .build();
 
 PaymentResponse payment = mpesa.collect(collectPayload);
@@ -162,6 +165,9 @@ PaymentResponse payment = airtel.collect(
         .setPhone("255780000000")
         .setReference("INV-2026-002")
         .setDescription("Invoice payment")
+        .setFirstName("Jane")
+        .setLastName("Doe")
+        .setEmail("jane@example.com")
         .build());
 ```
 
@@ -182,6 +188,9 @@ PaymentResponse payment = halopesa.collect(
         .setPhone("255762000000")
         .setReference("INV-2026-003")
         .setDescription("Invoice payment")
+        .setFirstName("Jane")
+        .setLastName("Doe")
+        .setEmail("jane@example.com")
         .build());
 ```
 
@@ -202,6 +211,9 @@ PaymentResponse payment = mixxbyyas.collect(
         .setPhone("255676000000")
         .setReference("INV-2026-004")
         .setDescription("Invoice payment")
+        .setFirstName("Jane")
+        .setLastName("Doe")
+        .setEmail("jane@example.com")
         .build());
 ```
 

@@ -39,9 +39,18 @@ publishing {
 
 def signingKey = findProperty("signingKey") as String
 def signingPassword = findProperty("signingPassword") as String
-if (signingKey) {
-    signing {
-        useInMemoryPgpKeys(signingKey, signingPassword)
-        sign publishing.publications.mavenJava
+signing {
+    // Fail the build when publishing to a remote repository without a signing key, instead of
+    // silently uploading unsigned artifacts that the Central Portal will reject. Local
+    // publishToMavenLocal stays unsigned so day-to-day development does not need a GPG key.
+    required = {
+        gradle.taskGraph.allTasks.any { task ->
+            task.name.contains('publishAggregation') ||
+                (task.name.startsWith('publish') && !task.name.contains('MavenLocal'))
+        }
     }
+    if (signingKey) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
+    sign publishing.publications.mavenJava
 }

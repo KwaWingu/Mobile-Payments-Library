@@ -44,7 +44,7 @@ public class HalopesaPayment implements MobilePayment {
         Map.of(
             "amount", payload.amount(),
             "channel", "mobile",
-            "recipient_phone", payload.phone().replaceFirst("^\\+", ""),
+            "recipient_phone", payload.phone(),
             "recipient_name", payload.recipientName(),
             "narration", payload.description(),
             "metadata", Map.of("order_id", payload.reference()));

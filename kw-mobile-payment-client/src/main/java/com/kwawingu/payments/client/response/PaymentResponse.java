@@ -7,7 +7,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public record PaymentResponse(
     String reference,
-    String status,
+    PaymentStatus status,
     long amount,
     String currency,
     @Nullable String createdAt,

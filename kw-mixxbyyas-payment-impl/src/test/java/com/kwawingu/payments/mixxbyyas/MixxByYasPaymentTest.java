@@ -5,11 +5,12 @@ package com.kwawingu.payments.mixxbyyas;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.kwawingu.payments.client.SnippeApiException;
 import com.kwawingu.payments.client.SnippeApiKey;
 import com.kwawingu.payments.client.response.PaymentResponse;
+import com.kwawingu.payments.client.response.PaymentStatus;
 import com.kwawingu.payments.client.response.PayoutResponse;
 import java.io.IOException;
-import java.util.Set;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,15 +19,14 @@ import org.slf4j.LoggerFactory;
 
 public class MixxByYasPaymentTest {
   private static final Logger LOG = LoggerFactory.getLogger(MixxByYasPaymentTest.class);
-  private static final Set<String> VALID_COLLECT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed", "cancelled");
-  private static final Set<String> VALID_PAYOUT_STATUSES =
-      Set.of("pending", "processing", "completed", "failed", "reversed", "cancelled");
 
   private MixxByYasPayment payment;
 
   @BeforeEach
   public void setUp() {
+    Assumptions.assumeTrue(
+        System.getenv("SNIPPE_API_KEY") != null,
+        "SNIPPE_API_KEY not set; skipping Snippe integration tests");
     payment = new MixxByYasPayment.Builder().setApiKey(SnippeApiKey.fromEnvironment()).build();
   }
 
@@ -47,9 +47,10 @@ public class MixxByYasPaymentTest {
 
     assertNotNull(response.reference(), "reference must not be null");
     assertFalse(response.reference().isBlank(), "reference must not be blank");
-    assertTrue(
-        VALID_COLLECT_STATUSES.contains(response.status()),
-        "status must be one of " + VALID_COLLECT_STATUSES + ", got: " + response.status());
+    assertNotEquals(
+        PaymentStatus.UNKNOWN,
+        response.status(),
+        "status must be a known value, got: " + response.status());
     assertEquals(1000L, response.amount());
     assertEquals("TZS", response.currency());
     LOG.info("collect response: ref={} status={}", response.reference(), response.status());
@@ -71,14 +72,15 @@ public class MixxByYasPaymentTest {
 
       assertNotNull(response.reference(), "reference must not be null");
       assertFalse(response.reference().isBlank(), "reference must not be blank");
-      assertTrue(
-          VALID_PAYOUT_STATUSES.contains(response.status()),
-          "status must be one of " + VALID_PAYOUT_STATUSES + ", got: " + response.status());
+      assertNotEquals(
+          PaymentStatus.UNKNOWN,
+          response.status(),
+          "status must be a known value, got: " + response.status());
       assertEquals(5000L, response.amount());
       assertEquals("TZS", response.currency());
       LOG.info("disburse response: ref={} status={}", response.reference(), response.status());
-    } catch (IOException e) {
-      if (e.getMessage() != null && e.getMessage().contains("PAY_004")) {
+    } catch (SnippeApiException e) {
+      if ("PAY_004".equals(e.errorCode())) {
         Assumptions.abort("Snippe sandbox payout balance unavailable: " + e.getMessage());
       } else {
         throw e;
