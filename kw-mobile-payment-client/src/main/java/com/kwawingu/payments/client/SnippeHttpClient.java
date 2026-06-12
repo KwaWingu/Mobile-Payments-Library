@@ -92,10 +92,29 @@ public final class SnippeHttpClient {
       // Do not surface the raw provider body to callers/logs at INFO: it can carry customer PII.
       LOG.warn("Snippe POST {} failed: HTTP {}", path, response.statusCode());
       LOG.debug("Snippe error body for POST {}: {}", path, response.body());
-      throw new SnippeApiException(
-          "Snippe HTTP error " + response.statusCode() + " for POST " + path,
-          null,
-          response.statusCode());
+      // Snippe reports business errors (e.g. PAY_004) with a non-2xx status AND a structured
+      // error_code in the body; parse it so callers can branch on the code, not the message.
+      String errorCode = null;
+      String apiMessage = null;
+      try {
+        ApiResponse err = gson.fromJson(response.body(), ApiResponse.class);
+        if (err != null) {
+          errorCode = err.error_code;
+          apiMessage = err.message;
+        }
+      } catch (RuntimeException ignored) {
+        // Non-JSON error body; fall back to a generic message below.
+      }
+      String message =
+          errorCode != null
+              ? "Snippe error ["
+                  + errorCode
+                  + "] (HTTP "
+                  + response.statusCode()
+                  + "): "
+                  + apiMessage
+              : "Snippe HTTP error " + response.statusCode() + " for POST " + path;
+      throw new SnippeApiException(message, errorCode, response.statusCode());
     }
 
     LOG.debug("Snippe POST {} → {}", path, response.statusCode());
@@ -173,7 +192,6 @@ public final class SnippeHttpClient {
 
   private static class ApiResponse {
     @Nullable String status = null;
-    int code = 0;
     @Nullable String error_code = null;
     @Nullable String message = null;
     @Nullable JsonObject data = null;
