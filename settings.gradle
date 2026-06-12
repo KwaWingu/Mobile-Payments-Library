@@ -6,7 +6,10 @@ nmcpSettings {
     centralPortal {
         username = System.getenv('CENTRAL_TOKEN_USERNAME') ?: ''
         password = System.getenv('CENTRAL_TOKEN_PASSWORD') ?: ''
-        publishingType = 'AUTOMATIC'
+        // USER_MANAGED: the tag-triggered workflow uploads the bundle, but a human clicks
+        // "Publish" in the Central Portal. Prevents a stray tag from cutting an irreversible
+        // release. Switch to AUTOMATIC once the pipeline is proven.
+        publishingType = 'USER_MANAGED'
     }
 }
 

@@ -17,12 +17,14 @@ dependencies {
     testImplementation libs.junit.jupiter.api
     testRuntimeOnly libs.junit.jupiter.engine
 
-    // Logback
-    runtimeOnly libs.logback.classic
-    runtimeOnly project(':kw-mobile-payment-logback-config')
+    // Logback is a test-only logging binding. A published library must not force an SLF4J binding
+    // on consumers, and the logback-config module is not published — keeping these on the test
+    // classpath stops them leaking into published POMs as (unresolvable) runtime dependencies.
+    testRuntimeOnly libs.logback.classic
+    testRuntimeOnly project(':kw-mobile-payment-logback-config')
 
-    // Checker Framework annotations available at compile time even without the checker running
-    compileOnly libs.checker.qual
+    // Checker Framework annotations appear in public API signatures, so expose them transitively.
+    api libs.checker.qual
 }
 
 def spotlessEnabled = Boolean.getBoolean('enable.spotless')
@@ -110,6 +112,10 @@ if (owaspEnabled) {
         scanConfigurations = ["runtimeClasspath"];
         format = 'ALL';
         failOnError = true;
+        // NVD throttles hard without a (free) API key; supply one via the NVD_API_KEY env var.
+        nvd {
+            apiKey = System.getenv('NVD_API_KEY')
+        }
         // suppressionFiles = [file("$rootProject.projectDir/gradle/cve-suppress.xml")]
     }
 }

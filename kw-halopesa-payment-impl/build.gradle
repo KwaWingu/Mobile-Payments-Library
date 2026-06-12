@@ -1,9 +1,11 @@
 apply from: rootProject.file('gradle/plugin-java.gradle')
 
 dependencies {
-    implementation project(':kw-halopesa-payment-api')
-    implementation project(':kw-mobile-payment-client')
-    testImplementation libs.slfj
+    // api: these appear in the impl's public method signatures (payload + response types), so
+    // consumers need them on their compile classpath.
+    api project(':kw-halopesa-payment-api')
+    api project(':kw-mobile-payment-client')
+    testImplementation libs.slf4j
 }
 
 apply from: rootProject.file('gradle/plugin-publish.gradle')

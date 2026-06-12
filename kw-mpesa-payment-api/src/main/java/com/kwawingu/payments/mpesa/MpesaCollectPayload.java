@@ -3,6 +3,7 @@
  */
 package com.kwawingu.payments.mpesa;
 
+import com.kwawingu.payments.client.PayloadValidation;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class MpesaCollectPayload {
@@ -99,15 +100,13 @@ public final class MpesaCollectPayload {
     }
 
     public MpesaCollectPayload build() {
-      if (phone == null) throw new NullPointerException("phone cannot be null");
-      if (reference == null) throw new NullPointerException("reference cannot be null");
-      if (description == null) throw new NullPointerException("description cannot be null");
-      if (firstName == null) throw new NullPointerException("firstName cannot be null");
-      if (lastName == null) throw new NullPointerException("lastName cannot be null");
-      if (email == null) throw new NullPointerException("email cannot be null");
-      if (amount <= 0) throw new IllegalArgumentException("amount must be positive");
-      if (reference.length() > 30)
-        throw new IllegalArgumentException("reference must be ≤30 chars");
+      this.phone = PayloadValidation.normalizePhone(phone);
+      this.reference = PayloadValidation.requireReference(reference);
+      this.email = PayloadValidation.requireEmail(email);
+      PayloadValidation.requireNonBlank(firstName, "firstName");
+      PayloadValidation.requireNonBlank(lastName, "lastName");
+      PayloadValidation.requireNonBlank(description, "description");
+      PayloadValidation.requirePositiveAmount(amount);
       return new MpesaCollectPayload(this);
     }
   }

@@ -1,19 +1,19 @@
 [versions]
-junit-jupiter = "5.10.0"
-slfj = "2.0.9"
-gson = "2.10.1"
+junit-jupiter = "5.11.4"
+slf4j = "2.0.16"
+gson = "2.11.0"
 spotless-plugin = "6.22.0"
 checkerframework = "3.40.0"
 checkerframework-plugin = "0.6.35"
 errorprone = "2.21.1"
 errorprone-plugin = "3.1.0"
 owasp-dependencycheck-plugin = "8.4.0"
-logback = "1.4.11"
+logback = "1.5.18"
 
 [libraries]
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-jupiter" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }
-slfj = { module = "org.slf4j:slf4j-api", version.ref = "slfj" }
+slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 checker = { module = "org.checkerframework:checker", version.ref = "checkerframework" }
 checker-qual = { module = "org.checkerframework:checker-qual", version.ref = "checkerframework" }

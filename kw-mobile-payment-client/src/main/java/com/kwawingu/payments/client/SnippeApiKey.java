@@ -17,10 +17,23 @@ public final class SnippeApiKey {
     if (key == null) {
       throw new IllegalStateException("SNIPPE_API_KEY environment variable is not set");
     }
-    return new SnippeApiKey(key);
+    return of(key);
+  }
+
+  public static SnippeApiKey of(String value) {
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException("API key cannot be null or blank");
+    }
+    return new SnippeApiKey(value);
   }
 
   public void insertAuthorizationHeader(Map<String, String> headers) {
     headers.put("Authorization", "Bearer " + value);
+  }
+
+  /** Never expose the secret in logs or stack traces. */
+  @Override
+  public String toString() {
+    return "SnippeApiKey{value=***redacted***}";
   }
 }
