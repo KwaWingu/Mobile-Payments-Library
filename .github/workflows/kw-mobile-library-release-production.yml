@@ -54,7 +54,22 @@ jobs:
       - name: Checker Framework
         run: ./gradlew clean testClasses -Dbuild.checker=true
 
+      # Re-running a tag (or tagging a version published by hand) must not fail: Central
+      # rejects a version that already exists, so skip the upload and still make the release.
+      - name: Already on Maven Central?
+        id: central
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          url="https://repo1.maven.org/maven2/com/kwawingu/kw-mpesa-payment-impl/$VERSION/kw-mpesa-payment-impl-$VERSION.pom"
+          if curl -fsI "$url" >/dev/null; then echo "exists=true" >> "$GITHUB_OUTPUT"; echo "$VERSION is already published"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Build jars for the GitHub Release (already published)
+        if: steps.central.outputs.exists == 'true'
+        run: ./gradlew clean assemble
+
       - name: Publish to Maven Central
+        if: steps.central.outputs.exists != 'true'
         run: ./gradlew clean publishAggregationToCentralPortal
         env:
           CENTRAL_PUBLISHING_TYPE: AUTOMATIC
@@ -64,6 +79,7 @@ jobs:
           CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
 
       - name: Wait until Maven Central serves the release
+        if: steps.central.outputs.exists != 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
