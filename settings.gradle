@@ -6,10 +6,10 @@ nmcpSettings {
     centralPortal {
         username = System.getenv('CENTRAL_TOKEN_USERNAME') ?: ''
         password = System.getenv('CENTRAL_TOKEN_PASSWORD') ?: ''
-        // USER_MANAGED: the tag-triggered workflow uploads the bundle, but a human clicks
-        // "Publish" in the Central Portal. Prevents a stray tag from cutting an irreversible
-        // release. Switch to AUTOMATIC once the pipeline is proven.
-        publishingType = 'USER_MANAGED'
+        // Local runs default to USER_MANAGED (a human clicks "Publish" in the Central Portal).
+        // The tag-triggered release workflow sets CENTRAL_PUBLISHING_TYPE=AUTOMATIC after checking
+        // that the tag matches gradle.properties, so a release needs no manual step.
+        publishingType = System.getenv('CENTRAL_PUBLISHING_TYPE') ?: 'USER_MANAGED'
     }
 }
 
