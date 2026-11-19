@@ -24,7 +24,7 @@ publishing {
                     developer {
                         id = 'kwawingu'
                         name = 'KwaWingu'
-                        email = 'dev@kwawingu.com'
+                        email = 'info@kwawingu.com'
                     }
                 }
                 scm {

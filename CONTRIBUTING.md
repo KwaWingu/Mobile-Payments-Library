@@ -18,12 +18,12 @@ To get started with contributing, please ensure you have the following set up:
 
 2. **Clone your fork**:
     ```sh
-    git clone https://github.com/TheOddagen/Mobile-Payments-Library
+    git clone https://github.com/KwaWingu/Mobile-Payments-Library
     ```
 
 3. **Add the original repository as a remote**:
     ```sh
-    git remote add upstream https://github.com/TheOddagen/Mobile-Payments-Library
+    git remote add upstream https://github.com/KwaWingu/Mobile-Payments-Library
     ```
 
 4. **Install the necessary dependencies**:
