@@ -4,3 +4,8 @@ plugins {
     alias libs.plugins.errorprone apply(false)
     alias libs.plugins.owasp.dependencycheck apply(false)
 }
+// The root project needs a repository too: nmcp (settings plugin) resolves its own task jar
+// (com.gradleup.nmcp:nmcp-tasks) on the root project when it aggregates the Central bundle.
+repositories {
+    mavenCentral()
+}
