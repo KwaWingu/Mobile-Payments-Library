@@ -10,8 +10,12 @@ The workflow runs the full CI pipeline, then:
 ./gradlew publishAggregationToCentralPortal
 ```
 
-This bundles every published module into a single Central Portal deployment
-(`publishingType = AUTOMATIC`, configured in `settings.gradle`).
+This bundles every published module into a single Central Portal deployment. The workflow sets
+`CENTRAL_PUBLISHING_TYPE=AUTOMATIC` (read in `settings.gradle`), so a tag releases with no manual
+step: it fails first if the tag does not match `version` in `gradle.properties` or is a SNAPSHOT,
+runs format + ErrorProne + Checker Framework, publishes, waits until repo1.maven.org serves the
+POM, and creates the GitHub Release with the jars attached. Local runs default to `USER_MANAGED`
+(click "Publish" in the Central Portal).
 
 Published modules (group `com.kwawingu`):
 
@@ -94,9 +98,9 @@ The release workflow maps these to `ORG_GRADLE_PROJECT_signingKey`,
    git push origin v0.0.1
    ```
 
-4. Watch **Actions → kw-mobile-library-release**. It runs CI, then the aggregated
-   publish. With `AUTOMATIC` publishing, a successful upload that passes Central's
-   validation is released without a manual "Publish" click.
+4. Watch **Actions → kw-mobile-library-release**. It verifies the tag, runs the checks,
+   publishes automatically, waits for Maven Central and creates the GitHub Release.
+   A Maven Central release is permanent: double-check the version before tagging.
 
 5. Verify: the artifacts appear at
    `https://central.sonatype.com/artifact/com.kwawingu/kw-mpesa-payment-impl` and on
