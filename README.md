@@ -1,21 +1,21 @@
 <div align="center">
 
-<h1><a href="https://github.com/TheCollinsByte/Mobile-Payments-Library">KwaWingu Mobile Payments Library</a></h1>
+<h1><a href="https://github.com/KwaWingu/Mobile-Payments-Library">KwaWingu Mobile Payments Library</a></h1>
 
-<a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/blob/main/LICENSE">
-<img alt="License" src="https://img.shields.io/github/license/TheCollinsByte/Mobile-Payments-Library?style=flat&color=eee&label="> </a>
+<a href="https://github.com/KwaWingu/Mobile-Payments-Library/blob/main/LICENSE">
+<img alt="License" src="https://img.shields.io/github/license/KwaWingu/Mobile-Payments-Library?style=flat&color=eee&label="> </a>
 
-<a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/graphs/contributors">
-<img alt="People" src="https://img.shields.io/github/contributors/TheCollinsByte/Mobile-Payments-Library?style=flat&color=ffaaf2&label=People"> </a>
+<a href="https://github.com/KwaWingu/Mobile-Payments-Library/graphs/contributors">
+<img alt="People" src="https://img.shields.io/github/contributors/KwaWingu/Mobile-Payments-Library?style=flat&color=ffaaf2&label=People"> </a>
 
-<a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/stargazers">
-<img alt="Stars" src="https://img.shields.io/github/stars/TheCollinsByte/Mobile-Payments-Library?style=flat&color=98c379&label=Stars"> </a>
+<a href="https://github.com/KwaWingu/Mobile-Payments-Library/stargazers">
+<img alt="Stars" src="https://img.shields.io/github/stars/KwaWingu/Mobile-Payments-Library?style=flat&color=98c379&label=Stars"> </a>
 
-<a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/network/members">
-<img alt="Forks" src="https://img.shields.io/github/forks/TheCollinsByte/Mobile-Payments-Library?style=flat&color=66a8e0&label=Forks"> </a>
+<a href="https://github.com/KwaWingu/Mobile-Payments-Library/network/members">
+<img alt="Forks" src="https://img.shields.io/github/forks/KwaWingu/Mobile-Payments-Library?style=flat&color=66a8e0&label=Forks"> </a>
 
-<a href="https://github.com/TheCollinsByte/Mobile-Payments-Library/pulse">
-<img alt="Last Updated" src="https://img.shields.io/github/last-commit/TheCollinsByte/Mobile-Payments-Library?style=flat&color=e06c75&label="> </a>
+<a href="https://github.com/KwaWingu/Mobile-Payments-Library/pulse">
+<img alt="Last Updated" src="https://img.shields.io/github/last-commit/KwaWingu/Mobile-Payments-Library?style=flat&color=e06c75&label="> </a>
 
 </div>
 
@@ -73,10 +73,10 @@ provider module(s) you need.
 ```groovy
 dependencies {
     // Pick the providers you need
-    implementation 'com.kwawingu:kw-mpesa-payment-impl:0.0.1'
-    implementation 'com.kwawingu:kw-airtel-payment-impl:0.0.1'
-    implementation 'com.kwawingu:kw-halopesa-payment-impl:0.0.1'
-    implementation 'com.kwawingu:kw-mixxbyyas-payment-impl:0.0.1'
+    implementation 'com.kwawingu:kw-mpesa-payment-impl:0.1.0'
+    implementation 'com.kwawingu:kw-airtel-payment-impl:0.1.0'
+    implementation 'com.kwawingu:kw-halopesa-payment-impl:0.1.0'
+    implementation 'com.kwawingu:kw-mixxbyyas-payment-impl:0.1.0'
 }
 ```
 
@@ -86,7 +86,7 @@ dependencies {
 <dependency>
     <groupId>com.kwawingu</groupId>
     <artifactId>kw-mpesa-payment-impl</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -262,9 +262,9 @@ Licensed under the Apache License 2.0 — see [LICENSE](LICENSE) for details.
 
 <strong>⭐ hit the star button if you found this useful ⭐</strong><br>
 
-<a href="https://github.com/TheCollinsByte/Mobile-Payments-Library">Source</a>
-| <a href="https://x.com/TheCollinsByte" target="_blank">Twitter</a>
-| <a href="http://www.linkedin.com/in/collins-boniface" target="_blank">LinkedIn</a>
-| <a href="mailto:collo@fastmail.com">Email</a>
+<a href="https://github.com/KwaWingu/Mobile-Payments-Library">Source</a>
+| <a href="https://central.sonatype.com/namespace/com.kwawingu">Maven Central</a>
+| <a href="https://kwawingu.com">KwaWingu</a>
+| <a href="mailto:info@kwawingu.com">Email</a>
 
 </div>
