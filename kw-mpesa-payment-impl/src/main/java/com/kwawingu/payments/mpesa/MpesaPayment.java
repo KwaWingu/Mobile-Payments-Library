@@ -33,6 +33,7 @@ public class MpesaPayment implements MobilePayment {
                     "firstname", payload.firstName(),
                     "lastname", payload.lastName(),
                     "email", payload.email()),
+            "webhook_url", payload.webhookUrl(),
             "metadata", Map.of("order_id", payload.reference()));
     return client.postPayment(apiKey, payload.reference(), body);
   }

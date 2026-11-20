@@ -43,6 +43,7 @@ public class HalopesaPaymentTest {
             .setFirstName("Test")
             .setLastName("User")
             .setEmail("test@example.com")
+            .setWebhookUrl("https://example.com/webhooks/snippe")
             .build();
 
     PaymentResponse response = payment.collect(payload);

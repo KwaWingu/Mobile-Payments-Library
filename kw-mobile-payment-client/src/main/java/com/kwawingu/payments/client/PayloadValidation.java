@@ -44,6 +44,25 @@ public final class PayloadValidation {
     return trimmed;
   }
 
+  /**
+   * The address Snippe calls when the payment changes state. Snippe refuses a collection without
+   * one ({@code VAL_001: webhook_url is required}), and only an absolute https URL can receive it.
+   */
+  public static String requireWebhookUrl(@Nullable String webhookUrl) {
+    if (webhookUrl == null) throw new NullPointerException("webhookUrl cannot be null");
+    String trimmed = webhookUrl.trim();
+    java.net.URI uri;
+    try {
+      uri = java.net.URI.create(trimmed);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException("webhookUrl is not a valid URL: " + webhookUrl, e);
+    }
+    if (!"https".equalsIgnoreCase(uri.getScheme()) || uri.getHost() == null) {
+      throw new IllegalArgumentException("webhookUrl must be an absolute https URL: " + webhookUrl);
+    }
+    return trimmed;
+  }
+
   public static String requireReference(@Nullable String reference) {
     if (reference == null) throw new NullPointerException("reference cannot be null");
     if (reference.isBlank()) throw new IllegalArgumentException("reference cannot be blank");

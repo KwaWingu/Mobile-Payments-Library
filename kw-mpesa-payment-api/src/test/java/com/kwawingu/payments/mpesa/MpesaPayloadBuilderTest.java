@@ -19,7 +19,24 @@ public class MpesaPayloadBuilderTest {
         .setDescription("Invoice")
         .setFirstName("Test")
         .setLastName("User")
-        .setEmail("test@example.com");
+        .setEmail("test@example.com")
+        .setWebhookUrl("https://example.com/webhooks/snippe");
+  }
+
+  @Test
+  public void collectBuildKeepsTheWebhookUrl() {
+    assertEquals("https://example.com/webhooks/snippe", validCollect().build().webhookUrl());
+  }
+
+  @Test
+  public void collectBuildRequiresAnHttpsWebhookUrl() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> validCollect().setWebhookUrl("http://example.com/hook").build());
+    assertThrows(
+        IllegalArgumentException.class, () -> validCollect().setWebhookUrl("not a url").build());
+    assertThrows(
+        IllegalArgumentException.class, () -> validCollect().setWebhookUrl("/relative").build());
   }
 
   @Test
