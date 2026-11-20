@@ -25,7 +25,9 @@ public class AirtelPaymentTest {
   @BeforeEach
   public void setUp() {
     Assumptions.assumeTrue(
-        System.getenv("SNIPPE_API_KEY") != null,
+        // GitHub passes a secret the run may not read (a fork or Dependabot pull request) as an
+        // empty string, not as an unset variable, so blank counts as "not set" too.
+        System.getenv("SNIPPE_API_KEY") != null && !System.getenv("SNIPPE_API_KEY").isBlank(),
         "SNIPPE_API_KEY not set; skipping Snippe integration tests");
     payment = new AirtelPayment.Builder().setApiKey(SnippeApiKey.fromEnvironment()).build();
   }
