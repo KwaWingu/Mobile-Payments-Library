@@ -14,6 +14,7 @@ public final class MpesaCollectPayload {
   private final String firstName;
   private final String lastName;
   private final String email;
+  private final String webhookUrl;
 
   @SuppressWarnings(
       "nullness") // builder.build() validates non-null before calling this constructor
@@ -25,6 +26,7 @@ public final class MpesaCollectPayload {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
     this.email = builder.email;
+    this.webhookUrl = builder.webhookUrl;
   }
 
   public long amount() {
@@ -55,6 +57,11 @@ public final class MpesaCollectPayload {
     return email;
   }
 
+  /** Where Snippe sends the payment's status changes. */
+  public String webhookUrl() {
+    return webhookUrl;
+  }
+
   public static class Builder {
     private long amount;
     private @Nullable String phone = null;
@@ -63,6 +70,7 @@ public final class MpesaCollectPayload {
     private @Nullable String firstName = null;
     private @Nullable String lastName = null;
     private @Nullable String email = null;
+    private @Nullable String webhookUrl = null;
 
     public Builder setAmount(long amount) {
       this.amount = amount;
@@ -99,10 +107,20 @@ public final class MpesaCollectPayload {
       return this;
     }
 
+    /**
+     * Required. The https address on your server that Snippe calls when the payment completes or
+     * fails.
+     */
+    public Builder setWebhookUrl(String webhookUrl) {
+      this.webhookUrl = webhookUrl;
+      return this;
+    }
+
     public MpesaCollectPayload build() {
       this.phone = PayloadValidation.normalizePhone(phone);
       this.reference = PayloadValidation.requireReference(reference);
       this.email = PayloadValidation.requireEmail(email);
+      this.webhookUrl = PayloadValidation.requireWebhookUrl(webhookUrl);
       PayloadValidation.requireNonBlank(firstName, "firstName");
       PayloadValidation.requireNonBlank(lastName, "lastName");
       PayloadValidation.requireNonBlank(description, "description");

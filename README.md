@@ -73,10 +73,10 @@ provider module(s) you need.
 ```groovy
 dependencies {
     // Pick the providers you need
-    implementation 'com.kwawingu:kw-mpesa-payment-impl:0.1.0'
-    implementation 'com.kwawingu:kw-airtel-payment-impl:0.1.0'
-    implementation 'com.kwawingu:kw-halopesa-payment-impl:0.1.0'
-    implementation 'com.kwawingu:kw-mixxbyyas-payment-impl:0.1.0'
+    implementation 'com.kwawingu:kw-mpesa-payment-impl:0.2.0'
+    implementation 'com.kwawingu:kw-airtel-payment-impl:0.2.0'
+    implementation 'com.kwawingu:kw-halopesa-payment-impl:0.2.0'
+    implementation 'com.kwawingu:kw-mixxbyyas-payment-impl:0.2.0'
 }
 ```
 
@@ -86,7 +86,7 @@ dependencies {
 <dependency>
     <groupId>com.kwawingu</groupId>
     <artifactId>kw-mpesa-payment-impl</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -130,6 +130,7 @@ MpesaCollectPayload collectPayload = new MpesaCollectPayload.Builder()
     .setFirstName("Jane")
     .setLastName("Doe")
     .setEmail("jane@example.com")
+    .setWebhookUrl("https://your-site.example/webhooks/snippe")
     .build();
 
 PaymentResponse payment = mpesa.collect(collectPayload);
@@ -168,6 +169,7 @@ PaymentResponse payment = airtel.collect(
         .setFirstName("Jane")
         .setLastName("Doe")
         .setEmail("jane@example.com")
+        .setWebhookUrl("https://your-site.example/webhooks/snippe")
         .build());
 ```
 
@@ -191,6 +193,7 @@ PaymentResponse payment = halopesa.collect(
         .setFirstName("Jane")
         .setLastName("Doe")
         .setEmail("jane@example.com")
+        .setWebhookUrl("https://your-site.example/webhooks/snippe")
         .build());
 ```
 
@@ -214,6 +217,7 @@ PaymentResponse payment = mixxbyyas.collect(
         .setFirstName("Jane")
         .setLastName("Doe")
         .setEmail("jane@example.com")
+        .setWebhookUrl("https://your-site.example/webhooks/snippe")
         .build());
 ```
 
